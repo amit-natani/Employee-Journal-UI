@@ -1,0 +1,25 @@
+<div class="form-group">
+  <label class="control-label col-sm-2">Billing Head:</label>
+  <div class="col-sm-10">
+    <ng-select [items]="billingHeads"
+      bindLabel="value"
+      bindValue="value"
+      placeholder="Select billing head"
+      [(ngModel)]="data.billing_head"
+      name="billingHead"
+      #billingHead="ngModel">
+    </ng-select>
+  </div>
+</div>
+<div class="form-group">
+  <label class="control-label col-sm-2">Created for date:</label>
+  <div class="col-sm-10">
+    <input name="worklogdate" class="form-control" type="date" [(ngModel)]="data.worklog_date"/>
+  </div>
+</div>
+<div class="form-group">
+  <label class="control-label col-sm-2">Duration:</label>
+  <div class="col-sm-10"> 
+    <input name="duration" class="form-control" type="number" [(ngModel)]="data.duration">
+  </div>
+</div>

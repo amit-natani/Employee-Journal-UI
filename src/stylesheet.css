@@ -1,0 +1,21 @@
+.card img {
+    height: 80px;
+}
+
+ul {
+    width: 100%;
+}
+
+.modal-body input{
+    width: 400px;
+}
+
+.ng-select.custom {
+  border:0px;
+  min-height: 0px;
+  border-radius: 0;
+}
+.ng-select.custom .ng-select-container  {            
+  min-height: 0px;
+  border-radius: 0;
+}

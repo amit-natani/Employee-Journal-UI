@@ -1,0 +1,93 @@
+<div class="container-fluid">
+  <form class="form-horizontal">
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="email">Select Entry Domain:</label>
+      <div class="col-sm-10">
+          <ng-select [items]="rootEntryTypes"
+            bindLabel="name"
+            (change)="getSubEntryTypes()"
+            bindValue="id"
+            placeholder="Select entry domain"
+            [(ngModel)]="entry.root_entry_type_id"
+            name="entry_domain"
+            #entry_domain="ngModel">
+          </ng-select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="email">Select Entry Type:</label>
+      <div class="col-sm-10">
+          <ng-select [items]="entryTypes"
+            bindLabel="name"
+            (change)="getCustomFields()"
+            bindValue="id"
+            placeholder="Select entry type"
+            [(ngModel)]="entry.entry_type_id"
+            name="entry_type"
+            #entry_type="ngModel">
+          </ng-select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="email">Enter title:</label>
+      <div class="col-sm-10">
+        <input name="title" type="text" class="form-control" [(ngModel)]="entry.title" #title="ngModel">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2">Description:</label>
+      <div class="col-sm-10">
+        <textarea name="description" style="width: 100%" id="textarea" [(ngModel)]="entry.description" #description="ngModel"></textarea>
+      </div>
+    </div>
+    <ng-template *ngIf="entry.entry_type_id" dynamic-content></ng-template>
+    <!-- <ng-include src="page.custom_page"></ng-include> -->
+    <div class="form-group">
+      <label class="control-label col-sm-2">Tag Users:</label>
+      <div class="col-sm-10">
+        <ng-select [items]="users"
+          bindLabel="name"
+          bindValue="id"
+          [multiple]="true"
+          placeholder="Select users to tag"
+          [(ngModel)]="entry.tagged_user_ids"
+          name="tagged_users"
+          #tagged_users="ngModel">
+        </ng-select> 
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2">Accessibility:</label>
+      <div class="col-4">
+        <ng-select [items]="sharingLevels"
+          bindLabel="value"
+          bindValue="key"
+          (change)="handleAccessibilityChange()"
+          placeholder="Choose a sharing level"
+          [(ngModel)]="entry.sharing_level"
+          name="sharing_level"
+          #sharing_level="ngModel">
+        </ng-select> 
+      </div>
+    </div>
+    <div class="form-group" *ngIf="entry.sharing_level == 'custom'">
+      <label class="control-label col-sm-2">Select users to share:</label>
+      <div class="col-10">
+        <ng-select [items]="users"
+          bindLabel="name"
+          bindValue="id"
+          [multiple]="true"
+          placeholder="Select users to share"
+          [(ngModel)]="entry.sharee_ids"
+          name="sharees"
+          #sharees="ngModel">
+        </ng-select> 
+      </div>
+    </div>
+    <div class="form-group"> 
+      <div class="col-sm-offset-2 col-sm-10">
+        <button class="btn btn-success" type="button" (click)="saveEntry()">Save Entry</button>
+      </div>
+    </div>
+  </form>
+</div>
