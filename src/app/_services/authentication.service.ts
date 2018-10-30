@@ -17,6 +17,6 @@ export class AuthenticationService {
 
   logout(): void {
     this.cookieService.delete('wrs_session');
-    this.router.navigate(['']);
+    this.router.navigate(['login']);
   }
 }

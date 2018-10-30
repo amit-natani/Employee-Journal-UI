@@ -15,9 +15,9 @@ export class ListEntriesComponent implements OnInit {
 
   entryTypes: EntryType[] = [];
 
-  private entryTypeId: String = null;
-  private entries: Entry[] = [];
-  private preSelectedEntryType: EntryType;
+  entryTypeId: String = null;
+  entries: Entry[] = [];
+  preSelectedEntryType: EntryType;
   
   constructor(private dataService: DataService, private entryTypeService: EntryTypeService, private entryService: EntryService, private route: ActivatedRoute) { }
 

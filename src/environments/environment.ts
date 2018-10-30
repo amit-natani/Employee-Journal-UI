@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  API_BASE_URL: 'http://localhost:3000'
+  API_BASE_URL: 'http://localhost:3000',
+  REDIRECT_URI: 'eyAnc2l0ZV91cmwnOiAnaHR0cDovL2xvY2FsaG9zdD-o0MjAwL2Rhc2hib2FyZCd9'
 };
 
 /*
