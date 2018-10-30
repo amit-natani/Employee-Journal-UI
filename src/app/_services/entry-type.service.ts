@@ -28,6 +28,13 @@ export class EntryTypeService {
 
   getRootEntryTypes(): Observable<EntryType[]> {
     const entryTypesUrl = `${this.api_base_url}/entry_types/root_entry_types.json`
+    // return this.http.get<any>("http://dev-services.agilestructure.in/api/v1/employees/111/groups.json")
+    // .pipe(
+    //   tap(entryTypes => {
+    //     console.log("Got root entry types")
+    //   }),
+    //   catchError(this.handleError('getRootEntryTypes', []))
+    // );
     return this.http.get<EntryType[]>(entryTypesUrl)
     .pipe(
       tap(entryTypes => {
@@ -43,6 +50,16 @@ export class EntryTypeService {
     .pipe(
       tap(entryTypes => {
         console.log("Got sub entry types")
+      })
+    );
+  }
+
+  getAllSubEntryTypes(): Observable<EntryType[]> {
+    const allSubEntryTypesUrl = `${this.api_base_url}/entry_types/all_sub_entry_types.json`;
+    return this.http.get<EntryType[]>(allSubEntryTypesUrl)
+    .pipe(
+      tap(entryTypes => {
+        console.log("Got All sub entry types")
       })
     );
   }

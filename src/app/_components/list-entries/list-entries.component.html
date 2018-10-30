@@ -1,0 +1,26 @@
+<div class="container-fluid">
+  <form class="form-horizontal">
+    <div class="form-group">
+      <label class="control-label col-sm-2">Select Entry Type:</label>
+      <div class="col-sm-10">
+        <ng-select [items]="entryTypes"
+          bindLabel="name"
+          (change)="getEntries()"
+          bindValue="id"
+          placeholder="Select entry type"
+          [(ngModel)]="entryTypeId"
+          name="entry_type"
+          #entry_type="ngModel">
+        </ng-select>
+      </div>
+    </div>
+  </form>
+  <div *ngIf="entries.length > 0 && entryTypeId">
+    <div class="panel panel-default" *ngFor="let entry of entries">
+      <div class="panel-body">{{entry.title}}</div>
+    </div>
+  </div>
+  <div *ngIf="entries.length == 0 && entryTypeId">
+    <h4>No worklogs found</h4>
+  </div>
+</div>

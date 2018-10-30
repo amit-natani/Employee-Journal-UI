@@ -1,13 +1,18 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { AddEntryComponent } from './add-entry/add-entry.component';
+import { DashboardComponent } from './_components/dashboard/dashboard.component';
+import { AddEntryComponent } from './_components/add-entry/add-entry.component';
+import { ListEntriesComponent } from './_components/list-entries/list-entries.component';
+import { LoginComponent } from './login/login.component';
+import { AuthGuard } from './_guards/auth_guard';
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'add-entry', component: AddEntryComponent }
+  { path: 'login', component: LoginComponent },
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+  { path: 'add-entry', component: AddEntryComponent, canActivate: [AuthGuard] },
+  { path: 'user/worklogs', component: ListEntriesComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({

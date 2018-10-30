@@ -27,8 +27,30 @@ export class EntryService {
     }
   }
 
-  getEntries(): Observable<any[]> {
+  getAllEntries(): Observable<any[]> {
     const entriesUrl = `${this.api_base_url}/entries.json`
+    return this.http.get<any>(entriesUrl)
+    .pipe(
+      tap(entries => {
+        console.log("Got entries")
+      }),
+      catchError(this.handleError('getEntries', []))
+    );
+  }
+
+  getWorklogCounts(): Observable<any> {
+    const entriesUrl = `${this.api_base_url}/entries/get_worklog_counts.json`
+    return this.http.get<any>(entriesUrl)
+    .pipe(
+      tap(counts => {
+        console.log("Got worklog counts")
+      }),
+      catchError(this.handleError('getWorklogCounts', {}))
+    );
+  }
+
+  getEntriesById(id): Observable<Entry[]> {
+    const entriesUrl = `${this.api_base_url}/entries/${id}/get_entries_by_entry_type_id.json`
     return this.http.get<any[]>(entriesUrl)
     .pipe(
       tap(entries => {
