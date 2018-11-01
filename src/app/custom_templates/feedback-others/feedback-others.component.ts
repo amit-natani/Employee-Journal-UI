@@ -16,13 +16,21 @@ export class FeedbackOthersComponent implements OnInit {
   constructor(private userService: UserService, private tagService: TagService) { }
 
   ngOnInit() {
-    this.userService.getUsers()
-    .subscribe(users => {
-      this.users = users;
-    })
+    // this.userService.getUsers()
+    // .subscribe(users => {
+    //   this.users = users;
+    // })
     this.tagService.getBillingHeadList()
     .subscribe(billingHeads => {
       this.billingHeads = billingHeads;
+    })
+  }
+
+  getUsers(query): void {
+    this.userService.getUsersByName(query)
+    .subscribe(users => {
+      // this.users = users;
+      this.users = users['employees']
     })
   }
 

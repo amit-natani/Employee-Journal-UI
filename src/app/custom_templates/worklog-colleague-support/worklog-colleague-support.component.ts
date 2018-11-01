@@ -14,9 +14,17 @@ export class WorklogColleagueSupportComponent implements OnInit {
   constructor(private userService: UserService) { }
 
   ngOnInit() {
-    this.userService.getUsers()
+    // this.userService.getUsers()
+    // .subscribe(users => {
+    //   this.users = users;
+    // })
+  }
+
+  getUsers(query): void {
+    this.userService.getUsersByName(query)
     .subscribe(users => {
-      this.users = users;
+      // this.users = users;
+      this.users = users['employees']
     })
   }
 
