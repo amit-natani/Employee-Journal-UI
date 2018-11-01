@@ -4,6 +4,7 @@ import { Router, NavigationExtras, ActivatedRoute } from '@angular/router';
 import { DataService } from '../../_services/data.service';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthenticationService } from '../../_services/authentication.service';
+import { UserService } from 'src/app/_services/user.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,6 +14,7 @@ import { AuthenticationService } from '../../_services/authentication.service';
 export class DashboardComponent implements OnInit {
 
   counts: any = {};
+  current_user: any = {};
 
   objectKeys = Object.keys;
 
@@ -21,7 +23,8 @@ export class DashboardComponent implements OnInit {
     private entryService: EntryService, 
     private router: Router, 
     private dataService: DataService,
-    private authenticationService: AuthenticationService) { }
+    private authenticationService: AuthenticationService,
+    private userService: UserService) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe(value => {
@@ -33,14 +36,23 @@ export class DashboardComponent implements OnInit {
         );
       }
     })
+    this.getCurrentUser();
     this.entryService.getWorklogCounts()
     .subscribe(counts => {
       this.counts = counts;
     })
   }
 
-  nvigateToWorklogList(key) {
+  navigateToWorklogList(key) {
     this.dataService.data = key;
     this.router.navigate([`/user/worklogs`]);
+  }
+
+  getCurrentUser(): void {
+    this.userService.getCurrentUser()
+    .subscribe(user => {
+      this.current_user = user;
+      this.dataService.current_user = user;
+    })
   }
 }

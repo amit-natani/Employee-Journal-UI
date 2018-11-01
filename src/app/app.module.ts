@@ -29,6 +29,7 @@ import { DashboardComponent } from './_components/dashboard/dashboard.component'
 import { AddEntryComponent } from './_components/add-entry/add-entry.component';
 import { ListEntriesComponent } from './_components/list-entries/list-entries.component';
 import { ErrorInterceptor } from './_helpers/error.interceptor';
+import { FeedbackDashboardComponent } from './_components/feedback-dashboard/feedback-dashboard.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { ErrorInterceptor } from './_helpers/error.interceptor';
     WorklogColleagueSupportComponent,
     ListEntriesComponent,
     LoginComponent,
+    FeedbackDashboardComponent,
   ],
   imports: [
     BrowserModule,

@@ -29,11 +29,11 @@
         <h2>Journal</h2>
       </div>
       <ul class="nav-menu">
-        <li (click)="changeRoute('worklogs')"><a href="#" routerLink="/dashboard" [class.active]="current_location === 'worklogs'">
+        <li (click)="changeRoute('worklogs')"><a href="#" routerLink="/worklog-dashboard" [class.active]="current_location === 'worklogs'">
             <i><img src="../assets/images/icons/home-icon.png" alt=""></i>
             <p>Work Log </p>
           </a></li>
-        <li (click)="changeRoute('feedbacks')"><a href="#" routerLink="/dashboard" [class.active]="current_location === 'feedbacks'">
+        <li (click)="changeRoute('feedbacks')"><a href="#" routerLink="/feedback-dashboard" [class.active]="current_location === 'feedbacks'">
             <i><img src="../assets/images/icons/chart-icon.png" alt=""></i>
             <p>Feedback</p>
           </a></li>

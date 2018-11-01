@@ -9,6 +9,7 @@ import { UserService } from '../../_services/user.service';
 import { TagService } from 'src/app/_services/tag.service';
 // import * as $ from 'jquery';
 declare var $: any;
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-add-entry',
@@ -20,9 +21,9 @@ export class AddEntryComponent implements OnInit {
   @ViewChild('selectElem') el:ElementRef;
   @Input() myTemplate: TemplateRef<any>;
 
-  @ViewChild(DynamicContentDirective) adHost: DynamicContentDirective;
+  @ViewChild(DynamicContentDirective) dynamicContentHost: DynamicContentDirective;
 
-  users: any[];
+  users: Observable<any>[];
   entryTypes: any[];
   rootEntryTypes: any[];
   entry: Entry;
@@ -75,36 +76,32 @@ export class AddEntryComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    const _this = this;
-    setTimeout(function() {
-      $("#description-textarea").textcomplete([
-        {
-          match: /(^|\s)#(\w*(?:\s*\w*))$/,
-          search: function(query, callback) {
-            // _this.handleQuery(query, callback)
-            let lastQuery = query;
-            _this.tagService.getOpenSuggestions(query)
-            .subscribe(suggestions => {
-              callback(suggestions);
-            })
-          },
-          // #5 - Template used to display each result obtained by the Algolia API
-          template: function (hit) {
-            return hit;
-          },
-          // #6 - Template used to display the selected result in the textarea
-          replace: function (hit) {
-            return ' #' + hit.trim() + ' ';
-          }
-        }
-      ], {
-          // footer: '<div style="text-align: center; display: block; font-size:12px; margin: 5px 0 0 0;">Powered by <a href="http://www.algolia.com"><img src="https://www.algolia.com/assets/algolia128x40.png" style="height: 14px;" /></a></div>'
-      });
-    }, 2000)
-    
-  }
-
-  handleQuery(query, callback): void {
+    // const _this = this;
+    // setTimeout(function() {
+    //   $("#description-textarea").textcomplete([
+    //     {
+    //       match: /(^|\s)#(\w*(?:\s*\w*))$/,
+    //       search: function(query, callback) {
+    //         // _this.handleQuery(query, callback)
+    //         let lastQuery = query;
+    //         _this.tagService.getOpenSuggestions(query)
+    //         .subscribe(suggestions => {
+    //           callback(suggestions);
+    //         })
+    //       },
+    //       // #5 - Template used to display each result obtained by the Algolia API
+    //       template: function (hit) {
+    //         return hit;
+    //       },
+    //       // #6 - Template used to display the selected result in the textarea
+    //       replace: function (hit) {
+    //         return ' #' + hit.trim() + ' ';
+    //       }
+    //     }
+    //   ], {
+    //       // footer: '<div style="text-align: center; display: block; font-size:12px; margin: 5px 0 0 0;">Powered by <a href="http://www.algolia.com"><img src="https://www.algolia.com/assets/algolia128x40.png" style="height: 14px;" /></a></div>'
+    //   });
+    // }, 2000)
     
   }
 
@@ -112,7 +109,7 @@ export class AddEntryComponent implements OnInit {
     let dynamicItem = this.dynamicContentservice.getDynamicContent(componentUrl);
     let componentFactory = this.componentFactoryResolver.resolveComponentFactory(dynamicItem.component);
 
-    let viewContainerRef = this.adHost.viewContainerRef;
+    let viewContainerRef = this.dynamicContentHost.viewContainerRef;
     viewContainerRef.clear();
 
     let componentRef = viewContainerRef.createComponent(componentFactory);
@@ -121,10 +118,10 @@ export class AddEntryComponent implements OnInit {
   }
 
   getUsers(): void {
-    this.userService.getUsers()
-    .subscribe(users => {
-      this.users = users
-    })
+    // this.userService.getUsers()
+    // .subscribe(users => {
+    //   this.users = users
+    // })
   }
   
   getRootEntryTypes(): void {
@@ -154,6 +151,31 @@ export class AddEntryComponent implements OnInit {
       this.loadDynamicComponent(customFields.custom_fields.create_url);
       this.custom_page = "add-entry/add_templates" + customFields.custom_fields.create_url
     })
+    const _this = this;
+    setTimeout(function() {
+      $("#description-textarea").textcomplete([
+        {
+          match: /(^|\s)#(\w*(?:\s*\w*))$/,
+          search: function(query, callback) {
+            let lastQuery = query;
+            _this.tagService.getOpenSuggestions(query)
+            .subscribe(suggestions => {
+              callback(suggestions);
+            })
+          },
+          // #5 - Template used to display each result obtained by the Algolia API
+          template: function (hit) {
+            return hit;
+          },
+          // #6 - Template used to display the selected result in the textarea
+          replace: function (hit) {
+            return ' #' + hit.trim() + ' ';
+          }
+        }
+      ], {
+          // footer: '<div style="text-align: center; display: block; font-size:12px; margin: 5px 0 0 0;">Powered by <a href="http://www.algolia.com"><img src="https://www.algolia.com/assets/algolia128x40.png" style="height: 14px;" /></a></div>'
+      });
+    }, 2000)
   }
 
   handleAccessibilityChange = function () {
@@ -189,6 +211,13 @@ export class AddEntryComponent implements OnInit {
     } else {
       alert(errors)
     }
+  }
+
+  getTaggingUsers(query): void {
+    this.userService.getUsersByName(query)
+    .subscribe(users => {
+      this.users = users['employees']
+    })
   }
 
 }

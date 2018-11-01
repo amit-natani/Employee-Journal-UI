@@ -2,12 +2,15 @@
   <label class="control-label col-sm-2">Related to:</label>
   <div class="col-sm-10">
     <ng-select [items]="users"
-      bindLabel="name"
+      bindLabel="full_name"
       bindValue="id"
       placeholder="Select user"
-      [(ngModel)]="data.related_to"
+      [hideSelected]="true"
+      [typeahead]="userName"
+      (search)="getUsers($event)"
       name="user"
-      #user="ngModel">
+      #user="ngModel"
+      [(ngModel)]="data.related_to">
     </ng-select>
   </div>
 </div>

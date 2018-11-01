@@ -5,7 +5,7 @@ import { UserService } from 'src/app/_services/user.service';
 @Component({
   selector: 'app-feedback-others',
   templateUrl: './feedback-others.component.html',
-  styleUrls: ['./feedback-others.component.css']
+  styleUrls: ['./feedback-others.component.scss']
 })
 export class FeedbackOthersComponent implements OnInit {
 

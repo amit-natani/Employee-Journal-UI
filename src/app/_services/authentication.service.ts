@@ -19,4 +19,12 @@ export class AuthenticationService {
     this.cookieService.delete('wrs_session');
     this.router.navigate(['login']);
   }
+
+  isLoggedIn(): Boolean {
+    let loggedIn = false;
+    if(this.cookieService.get('wrs_session')) {
+      loggedIn = true;
+    }
+    return loggedIn;
+  }
 }
