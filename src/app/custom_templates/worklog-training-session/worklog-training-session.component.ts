@@ -3,7 +3,7 @@ import { Component, OnInit, Input } from '@angular/core';
 @Component({
   selector: 'app-worklog-training-session',
   templateUrl: './worklog-training-session.component.html',
-  styleUrls: ['./worklog-training-session.component.css']
+  styleUrls: ['./worklog-training-session.component.scss']
 })
 export class WorklogTrainingSessionComponent implements OnInit {
 

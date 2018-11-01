@@ -4,7 +4,7 @@ import { TagService } from 'src/app/_services/tag.service';
 @Component({
   selector: 'app-feedback-self',
   templateUrl: './feedback-self.component.html',
-  styleUrls: ['./feedback-self.component.css']
+  styleUrls: ['./feedback-self.component.scss']
 })
 export class FeedbackSelfComponent implements OnInit {
 

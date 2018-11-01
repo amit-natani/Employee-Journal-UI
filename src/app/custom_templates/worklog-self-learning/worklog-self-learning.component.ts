@@ -3,7 +3,7 @@ import { Component, OnInit, Input } from '@angular/core';
 @Component({
   selector: 'app-worklog-self-learning',
   templateUrl: './worklog-self-learning.component.html',
-  styleUrls: ['./worklog-self-learning.component.css']
+  styleUrls: ['./worklog-self-learning.component.scss']
 })
 export class WorklogSelfLearningComponent implements OnInit {
 

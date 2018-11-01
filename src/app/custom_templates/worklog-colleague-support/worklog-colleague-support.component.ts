@@ -4,7 +4,7 @@ import { UserService } from 'src/app/_services/user.service';
 @Component({
   selector: 'app-worklog-colleague-support',
   templateUrl: './worklog-colleague-support.component.html',
-  styleUrls: ['./worklog-colleague-support.component.css']
+  styleUrls: ['./worklog-colleague-support.component.scss']
 })
 export class WorklogColleagueSupportComponent implements OnInit {
 

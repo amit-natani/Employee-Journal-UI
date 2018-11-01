@@ -7,6 +7,9 @@ import { NgSelectModule } from '@ng-select/ng-select';
 
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
+// OAuth
+import { OAuthModule } from 'angular-oauth2-oidc';
+
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './/app-routing.module';
 import { WorklogInterviewComponent } from './custom_templates/worklog-interview/worklog-interview.component';
@@ -20,7 +23,7 @@ import { FeedbackSelfComponent } from './custom_templates/feedback-self/feedback
 import { FeedbackOthersComponent } from './custom_templates/feedback-others/feedback-others.component';
 import { WorklogSelfLearningComponent } from './custom_templates/worklog-self-learning/worklog-self-learning.component';
 import { WorklogColleagueSupportComponent } from './custom_templates/worklog-colleague-support/worklog-colleague-support.component';
-import { LoginComponent } from './login/login.component';
+import { LoginComponent } from './_components/login/login.component';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthGuard } from './_guards/auth_guard';
 import { AuthenticationService } from './_services/authentication.service';
@@ -55,7 +58,8 @@ import { ErrorInterceptor } from './_helpers/error.interceptor';
     AppRoutingModule,
     HttpClientModule,
     NgSelectModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    OAuthModule.forRoot()
   ],
   entryComponents: [ WorklogInterviewComponent, WorklogColleagueSupportComponent, WorklogMentoringComponent, WorklogProjectMeetingComponent, WorklogNonProjectMeetingComponent, WorklogProjectTaskComponent, WorklogSelfLearningComponent, WorklogSelfLearningComponent, FeedbackOthersComponent, FeedbackSelfComponent ],
   providers: [

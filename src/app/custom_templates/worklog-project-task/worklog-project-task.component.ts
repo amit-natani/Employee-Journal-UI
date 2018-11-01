@@ -4,7 +4,7 @@ import { TagService } from 'src/app/_services/tag.service';
 @Component({
   selector: 'app-worklog-project-task',
   templateUrl: './worklog-project-task.component.html',
-  styleUrls: ['./worklog-project-task.component.css']
+  styleUrls: ['./worklog-project-task.component.scss']
 })
 export class WorklogProjectTaskComponent implements OnInit {
   

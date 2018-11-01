@@ -4,8 +4,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { DashboardComponent } from './_components/dashboard/dashboard.component';
 import { AddEntryComponent } from './_components/add-entry/add-entry.component';
 import { ListEntriesComponent } from './_components/list-entries/list-entries.component';
-import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './_guards/auth_guard';
+import { LoginComponent } from './_components/login/login.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },

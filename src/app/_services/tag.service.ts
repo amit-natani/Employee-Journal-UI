@@ -3,6 +3,7 @@ import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment'
+import { DataService } from './data.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class TagService {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private dataService: DataService) { }
 
   private handleError<T> (operation = 'operation', result?: T) {
     return(error: any): Observable<T> => {
@@ -26,11 +27,19 @@ export class TagService {
   }
 
   getBillingHeadList(): Observable<any[]> {
-    const billingHeadUrl = `${this.api_base_url}/tags/get_billing_head_list.json`
-    return this.http.get<any[]>(billingHeadUrl)
+    // const billingHeadUrl = `${this.api_base_url}/tags/get_billing_head_list.json`
+    // return this.http.get<any[]>(billingHeadUrl)
+    // .pipe(
+    //   tap(billingHeads => {
+    //     console.log("Got Billing head list")
+    //   }),
+    //   catchError(this.handleError('getBillingHeadList', []))
+    // );
+    let params = new HttpParams().set("include_manager",'true');
+    return this.http.get<any>(`http://dev-services.agilestructure.in/api/v1/employees/${this.dataService.current_user.id}/groups.json`, { params: params })
     .pipe(
-      tap(billingHeads => {
-        console.log("Got Billing head list")
+      tap(groups => {
+        console.log("Got Billing heads")
       }),
       catchError(this.handleError('getBillingHeadList', []))
     );

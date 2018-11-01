@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment'
@@ -33,6 +33,29 @@ export class UserService {
         console.log("Got users")
       }),
       catchError(this.handleError('getUsers', []))
+    );
+  }
+
+  getCurrentUser(): Observable<any> {
+    const currentUserUrl = `http://dev-services.agilestructure.in/api/v1/sessions/current.json`
+    return this.http.get<any>(currentUserUrl)
+    .pipe(
+      tap(users => {
+        console.log("Got current user")
+      }),
+      catchError(this.handleError('getCurrentUser', []))
+    );
+  }
+
+  getUsersByName(query): Observable<any[]> {
+    let params = new HttpParams().set("query", query).set("per", "10");
+    const usersByNameUrl = `http://dev-services.agilestructure.in/api/v1/employees`
+    return this.http.get<any>(usersByNameUrl, { params: params })
+    .pipe(
+      tap(users => {
+        console.log("Got users by name")
+      }),
+      catchError(this.handleError('getUsersByName', []))
     );
   }
 }

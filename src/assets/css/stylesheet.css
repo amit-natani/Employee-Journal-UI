@@ -659,6 +659,10 @@ ul {
     position: relative;
     padding: 3px 10px;
   }
+
+  .dropdown-menu .active {
+    background-color: black;
+  }
   
   .dropdown-menu .textcomplete-item.active a {
     background: #F0F0F0;
@@ -681,7 +685,7 @@ ul {
        Used in 
        autocomplete-with-pictures.html
      ------------------------------------ */
-  .dropdown-menu .textcomplete-item a {
+  /* .dropdown-menu .textcomplete-item a {
     box-sizing: border-box;
     height: 42px;
   }
@@ -703,14 +707,14 @@ ul {
   .dropdown-menu .textcomplete-item .name {
     float: left;
     margin: 5px 0 0 5px;
-  }
+  } */
   
   
   /* ------------------------------------
        Used in 
        rich-html-textarea.html
      ------------------------------------ */
-  .tag-item, .tag-item:visited {
+  /* .tag-item, .tag-item:visited {
     font-weight: normal;
     padding: 2px 3px;
     -webkit-border-radius: 2px;
@@ -743,4 +747,4 @@ ul {
 
   .tag-item .label {
     color: #181818;
-  }
+  } */

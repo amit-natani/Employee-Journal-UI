@@ -1,13 +1,24 @@
 <div class="form-group">
   <label class="control-label col-sm-2">Related to:</label>
   <div class="col-sm-10">
-    <ng-select [items]="users"
+    <!-- <ng-select [items]="users"
       bindLabel="name"
       bindValue="id"
       placeholder="Select user"
       [(ngModel)]="data.related_to"
       name="user"
       #user="ngModel">
+    </ng-select> -->
+    <ng-select [items]="users"
+      bindLabel="full_name"
+      bindValue="id"
+      placeholder="Select user"
+      [hideSelected]="true"
+      [typeahead]="userName"
+      (search)="getUsers($event)"
+      name="user"
+      #user="ngModel"
+      [(ngModel)]="data.related_to">
     </ng-select>
   </div>
 </div>

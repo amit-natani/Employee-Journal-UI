@@ -436,6 +436,8 @@ if (typeof jQuery === 'undefined') {
           display: 'none',
           left: 0,
           position: 'absolute',
+          visibility: 'visible',
+          opacity: 1,
           zIndex: option.zIndex
         })
         .appendTo($parent);

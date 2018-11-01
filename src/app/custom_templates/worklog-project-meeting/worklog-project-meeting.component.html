@@ -2,11 +2,12 @@
   <label class="control-label col-sm-2">Billing Head:</label>
   <div class="col-sm-10">
     <ng-select [items]="billingHeads"
-      bindLabel="value"
-      bindValue="value"
+      bindLabel="display_name"
+      bindValue="id"
       placeholder="Select billing head"
       [(ngModel)]="data.billing_head"
       name="billingHead"
+      (change)="onSelect()"
       #billingHead="ngModel">
     </ng-select>
   </div>
