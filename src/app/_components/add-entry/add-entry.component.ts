@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, TemplateRef, ComponentFactoryResolver, ViewChild, isDevMode, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, TemplateRef, ComponentFactoryResolver, ViewChild, ElementRef } from '@angular/core';
 import { EntryService } from '../../_services/entry.service';
 import { EntryTypeService } from '../../_services/entry-type.service';
 import { Entry } from '../../_models/entry';
@@ -45,7 +45,7 @@ export class AddEntryComponent implements OnInit {
 
   ngOnInit() {
     this.entry = new Entry();
-    this.getUsers();
+    // this.getUsers();
     this.getRootEntryTypes();
     this.sharingLevels = [{
       key: 'private',
@@ -75,36 +75,6 @@ export class AddEntryComponent implements OnInit {
     ];
   }
 
-  ngAfterViewInit() {
-    // const _this = this;
-    // setTimeout(function() {
-    //   $("#description-textarea").textcomplete([
-    //     {
-    //       match: /(^|\s)#(\w*(?:\s*\w*))$/,
-    //       search: function(query, callback) {
-    //         // _this.handleQuery(query, callback)
-    //         let lastQuery = query;
-    //         _this.tagService.getOpenSuggestions(query)
-    //         .subscribe(suggestions => {
-    //           callback(suggestions);
-    //         })
-    //       },
-    //       // #5 - Template used to display each result obtained by the Algolia API
-    //       template: function (hit) {
-    //         return hit;
-    //       },
-    //       // #6 - Template used to display the selected result in the textarea
-    //       replace: function (hit) {
-    //         return ' #' + hit.trim() + ' ';
-    //       }
-    //     }
-    //   ], {
-    //       // footer: '<div style="text-align: center; display: block; font-size:12px; margin: 5px 0 0 0;">Powered by <a href="http://www.algolia.com"><img src="https://www.algolia.com/assets/algolia128x40.png" style="height: 14px;" /></a></div>'
-    //   });
-    // }, 2000)
-    
-  }
-
   loadDynamicComponent(componentUrl) {
     let dynamicItem = this.dynamicContentservice.getDynamicContent(componentUrl);
     let componentFactory = this.componentFactoryResolver.resolveComponentFactory(dynamicItem.component);
@@ -118,10 +88,10 @@ export class AddEntryComponent implements OnInit {
   }
 
   getUsers(): void {
-    // this.userService.getUsers()
-    // .subscribe(users => {
-    //   this.users = users
-    // })
+    this.userService.getUsers()
+    .subscribe(users => {
+      this.users = users
+    })
   }
   
   getRootEntryTypes(): void {
