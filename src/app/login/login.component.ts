@@ -20,6 +20,7 @@ export class LoginComponent implements OnInit {
   }
 
   login(): void {
+    // window.location.href = "http://localhost:8080/login?email=amit.natani%40metacube.com&client_id=222"
     window.location.href = `http://dev-accounts.agilestructure.in/sessions/new?state=${this.redirect_uri}&email=${this.email}`;
   }
 

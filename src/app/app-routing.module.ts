@@ -14,6 +14,7 @@ const routes: Routes = [
   { path: 'worklog-dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'feedback-dashboard', component: FeedbackDashboardComponent, canActivate: [AuthGuard] },
   { path: 'add-entry', component: AddEntryComponent, canActivate: [AuthGuard] },
+  { path: 'add-entry/:type', component: AddEntryComponent, canActivate: [AuthGuard] },
   { path: 'user/worklogs', component: ListEntriesComponent, canActivate: [AuthGuard] },
   { path: 'user/feedbacks', component: ListEntriesComponent, canActivate: [AuthGuard] }
 ];

@@ -23,7 +23,6 @@ export class DashboardComponent implements OnInit {
     private entryService: EntryService, 
     private router: Router, 
     private dataService: DataService,
-    private authenticationService: AuthenticationService,
     private userService: UserService) { }
 
   ngOnInit() {

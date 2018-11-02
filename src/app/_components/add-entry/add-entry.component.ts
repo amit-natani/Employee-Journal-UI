@@ -10,6 +10,7 @@ import { TagService } from 'src/app/_services/tag.service';
 // import * as $ from 'jquery';
 declare var $: any;
 import { Observable } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-add-entry',
@@ -41,7 +42,8 @@ export class AddEntryComponent implements OnInit {
     private entryTypesService: EntryTypeService,
     private componentFactoryResolver: ComponentFactoryResolver,
     private dynamicContentservice: DynamicContentService,
-    private tagService: TagService) { }
+    private tagService: TagService,
+    private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.entry = new Entry();
@@ -66,13 +68,6 @@ export class AddEntryComponent implements OnInit {
       key: 'tagged_users',
       value: 'Tagged users only'
     }]
-    this.cities = [
-      {id: 1, name: 'Vilnius'},
-      {id: 2, name: 'Kaunas'},
-      {id: 3, name: 'Pavilnys', disabled: true},
-      {id: 4, name: 'Pabradė'},
-      {id: 5, name: 'Klaipėda'}
-    ];
   }
 
   loadDynamicComponent(componentUrl) {
@@ -98,6 +93,16 @@ export class AddEntryComponent implements OnInit {
     this.entryTypesService.getRootEntryTypes()
     .subscribe(entryTypes => {
       this.rootEntryTypes = entryTypes;
+      this.route.params.subscribe(value => {
+        let type = value.type;
+        if(type != undefined) {
+          let preselectedType = this.rootEntryTypes.find(entryType => entryType.name.toLowerCase() === type.toLowerCase())
+          if (preselectedType != undefined) {
+            this.entry.root_entry_type_id = preselectedType.id
+            this.getSubEntryTypes();
+          }
+        }
+      })
     })
   }
 
