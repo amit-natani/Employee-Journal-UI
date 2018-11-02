@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AuthenticationService } from '../_services/authentication.service';
 import { CookieService } from 'ngx-cookie-service';
 
 @Injectable()
 export class RequestInterceptor implements HttpInterceptor {
   constructor(
-    private authenticationService: AuthenticationService,
     private cookieService: CookieService
   ) {}
 
@@ -21,7 +19,7 @@ export class RequestInterceptor implements HttpInterceptor {
       });
     }
     request = request.clone({
-      setHeaders: { 
+      setHeaders: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       }

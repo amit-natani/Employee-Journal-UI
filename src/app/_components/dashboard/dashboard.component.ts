@@ -27,15 +27,7 @@ export class DashboardComponent implements OnInit {
     private userService: UserService) { }
 
   ngOnInit() {
-    this.route.queryParams.subscribe(value => {
-      if(value.access_token != undefined) {
-        this.authenticationService.login(value.access_token);
-        this.router.navigate(
-          ['.'], 
-          { relativeTo: this.route, queryParams: { access_token: null, sso_enabled: null } }
-        );
-      }
-    })
+    this.removeQueryParams();
     this.getCurrentUser();
     this.entryService.getWorklogCounts()
     .subscribe(counts => {
@@ -53,6 +45,17 @@ export class DashboardComponent implements OnInit {
     .subscribe(user => {
       this.current_user = user;
       this.dataService.current_user = user;
+    })
+  }
+
+  removeQueryParams(): void {
+    this.route.queryParams.subscribe(value => {
+      if(value.access_token != undefined) {
+        this.router.navigate(
+          ['.'],
+          { relativeTo: this.route, queryParams: { access_token: null, sso_enabled: null } }
+        );
+      }
     })
   }
 }

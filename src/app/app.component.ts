@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { AuthenticationService } from './_services/authentication.service';
 import { UserService } from './_services/user.service';
 import { DataService } from './_services/data.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-root',
@@ -16,10 +17,13 @@ export class AppComponent {
 
   constructor(private authenticationService: AuthenticationService,
     private userService: UserService,
-    private dataService: DataService) {}
+    private dataService: DataService,
+    private cookieService: CookieService) {}
 
   ngOnInit() {
-    this.getCurrentUser();
+    if(this.cookieService.get('wrs_session') != undefined && this.cookieService.get('wrs_session') != null && this.cookieService.get('wrs_session') != "") {
+      this.getCurrentUser();
+    }
   }
 
   changeRoute(loc): void {
