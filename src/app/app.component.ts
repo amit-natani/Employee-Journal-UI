@@ -12,10 +12,9 @@ import { CookieService } from 'ngx-cookie-service';
 })
 export class AppComponent {
   title = 'Employee-Journal';
-  current_location = "worklogs";
   current_user: {} = {}
 
-  constructor(private authenticationService: AuthenticationService,
+  constructor(
     private userService: UserService,
     private dataService: DataService,
     private cookieService: CookieService) {}
@@ -24,14 +23,6 @@ export class AppComponent {
     if(this.cookieService.get('wrs_session') != undefined && this.cookieService.get('wrs_session') != null && this.cookieService.get('wrs_session') != "") {
       this.getCurrentUser();
     }
-  }
-
-  changeRoute(loc): void {
-    this.current_location = loc;
-  }
- 
-  logout(): void {
-    this.authenticationService.logout();
   }
 
   getCurrentUser(): void {

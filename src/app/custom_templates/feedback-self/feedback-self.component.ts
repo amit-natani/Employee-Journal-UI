@@ -11,7 +11,9 @@ export class FeedbackSelfComponent implements OnInit {
   billingHeads: object[]
   @Input() data: any;
 
-  constructor(private tagService: TagService) { }
+  constructor(
+    private tagService: TagService
+  ) { }
 
   ngOnInit() {
     this.tagService.getBillingHeadList()

@@ -311,7 +311,13 @@ if (typeof jQuery === 'undefined') {
         var strategy = this.strategies[i];
         var context = strategy.context(text);
         if (context || context === '') {
-          var matchRegexp = $.isFunction(strategy.match) ? strategy.match(text) : strategy.match;
+          if (text.lastIndexOf("#") >= text.lastIndexOf("@")) {
+            var matchRegexp = $.isFunction(strategy.matchHash) ? strategy.matchHash(text) : strategy.matchHash;
+            strategy.currentStrategy = "hash"
+          }  else if (text.lastIndexOf("#") < text.lastIndexOf("@")) {
+            strategy.currentStrategy = "atTheRate"
+            var matchRegexp = $.isFunction(strategy.matchAtTheRate) ? strategy.matchAtTheRate(text) : strategy.matchAtTheRate;
+          }
           if (isString(context)) { text = context; }
           var match = text.match(matchRegexp);
           if (match) { return [strategy, match[strategy.index], match]; }
@@ -323,9 +329,8 @@ if (typeof jQuery === 'undefined') {
     // Call the search method of selected strategy..
     _search: lock(function (free, strategy, term, match) {
       var self = this;
-      strategy.search(term, function (data, stillSearching) {
+      strategy.search(term, strategy.currentStrategy, function (data, stillSearching) {
         // if (!self.dropdown.shown) {
-          console.log(self.dropdown.shown)
           self.dropdown.activate();
         // }
         if (self._clearAtNext) {
@@ -907,9 +912,11 @@ if (typeof jQuery === 'undefined') {
     // -----------------
 
     // Required
-    match:      null,
+    matchHash:      null,
+    matchAtTheRate:      null,
     replace:    null,
     search:     null,
+    currentStrategy: null,
 
     // Optional
     id:         null,
@@ -1082,14 +1089,18 @@ if (typeof jQuery === 'undefined') {
     select: function (value, strategy, e) {
       var pre = this.getTextFromHeadToCaret();
       var post = this.el.value.substring(this.el.selectionEnd);
-      var newSubstr = strategy.replace(value, e);
+      var newSubstr = strategy.replace(value, strategy.currentStrategy, e);
       var regExp;
       if (typeof newSubstr !== 'undefined') {
         if ($.isArray(newSubstr)) {
           post = newSubstr[1] + post;
           newSubstr = newSubstr[0];
         }
-        regExp = $.isFunction(strategy.match) ? strategy.match(pre) : strategy.match;
+        if (strategy.currentStrategy == 'hash') {
+          regExp = $.isFunction(strategy.matchHash) ? strategy.matchHash(pre) : strategy.matchHash;
+        } else if (strategy.currentStrategy == 'atTheRate') {
+          regExp = $.isFunction(strategy.matchAtTheRate) ? strategy.matchAtTheRate(pre) : strategy.matchAtTheRate;
+        }
         pre = pre.replace(regExp, newSubstr);
         this.$el.val(pre + post);
         this.el.selectionStart = this.el.selectionEnd = pre.length;
@@ -1163,7 +1174,7 @@ if (typeof jQuery === 'undefined') {
           post = newSubstr[1] + post;
           newSubstr = newSubstr[0];
         }
-        regExp = $.isFunction(strategy.match) ? strategy.match(pre) : strategy.match;
+        regExp = $.isFunction(strategy.matchHash) ? strategy.matchHash(pre) : strategy.matchHash;
         pre = pre.replace(regExp, newSubstr);
         this.$el.val(pre + post);
         this.el.focus();
@@ -1218,14 +1229,18 @@ if (typeof jQuery === 'undefined') {
       selection.selectNodeContents(range.startContainer);
       var content = selection.toString();
       var post = content.substring(range.startOffset);
-      var newSubstr = strategy.replace(value, e);
+      var newSubstr = strategy.replace(value, strategy.currentStrategy, e);
       var regExp;
       if (typeof newSubstr !== 'undefined') {
         if ($.isArray(newSubstr)) {
           post = newSubstr[1] + post;
           newSubstr = newSubstr[0];
         }
-        regExp = $.isFunction(strategy.match) ? strategy.match(pre) : strategy.match;
+        if (strategy.currentStrategy == 'hash') {
+          regExp = $.isFunction(strategy.matchHash) ? strategy.matchHash(pre) : strategy.matchHash;
+        } else if (strategy.currentStrategy == 'atTheRate') {
+          regExp = $.isFunction(strategy.matchAtTheRate) ? strategy.matchAtTheRate(pre) : strategy.matchAtTheRate;
+        }
         pre = pre.replace(regExp, newSubstr)
             .replace(/ $/, "&nbsp"); // &nbsp necessary at least for CKeditor to not eat spaces
         range.selectNodeContents(range.startContainer);

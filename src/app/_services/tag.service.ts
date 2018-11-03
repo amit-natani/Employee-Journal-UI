@@ -11,10 +11,7 @@ import { DataService } from './data.service';
 export class TagService {
 
   api_base_url = environment.API_BASE_URL
-
-  httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-  };
+  wrs_api_base_url = environment.WRS_API_BASE_URL
 
   constructor(private http: HttpClient, private dataService: DataService) { }
 
@@ -36,7 +33,7 @@ export class TagService {
     //   catchError(this.handleError('getBillingHeadList', []))
     // );
     let params = new HttpParams().set("include_manager",'true');
-    return this.http.get<any>(`http://dev-services.agilestructure.in/api/v1/employees/${this.dataService.current_user.id}/groups.json`, { params: params })
+    return this.http.get<any>(`${this.wrs_api_base_url}/employees/${this.dataService.current_user.id}/groups.json`, { params: params })
     .pipe(
       tap(groups => {
         console.log("Got Billing heads")

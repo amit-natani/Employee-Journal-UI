@@ -30,6 +30,8 @@ import { AddEntryComponent } from './_components/add-entry/add-entry.component';
 import { ListEntriesComponent } from './_components/list-entries/list-entries.component';
 import { ErrorInterceptor } from './_helpers/error.interceptor';
 import { FeedbackDashboardComponent } from './_components/feedback-dashboard/feedback-dashboard.component';
+import { SidenavComponent } from './_components/sidenav/sidenav.component';
+import { MainnavComponent } from './_components/mainnav/mainnav.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +52,8 @@ import { FeedbackDashboardComponent } from './_components/feedback-dashboard/fee
     ListEntriesComponent,
     LoginComponent,
     FeedbackDashboardComponent,
+    SidenavComponent,
+    MainnavComponent
   ],
   imports: [
     BrowserModule,
@@ -59,7 +63,17 @@ import { FeedbackDashboardComponent } from './_components/feedback-dashboard/fee
     NgSelectModule,
     ReactiveFormsModule
   ],
-  entryComponents: [ WorklogInterviewComponent, WorklogColleagueSupportComponent, WorklogMentoringComponent, WorklogProjectMeetingComponent, WorklogNonProjectMeetingComponent, WorklogProjectTaskComponent, WorklogSelfLearningComponent, WorklogSelfLearningComponent, FeedbackOthersComponent, FeedbackSelfComponent ],
+  entryComponents: [ 
+    WorklogInterviewComponent,
+    WorklogColleagueSupportComponent, 
+    WorklogMentoringComponent, 
+    WorklogProjectMeetingComponent, 
+    WorklogNonProjectMeetingComponent, 
+    WorklogProjectTaskComponent, 
+    WorklogSelfLearningComponent, 
+    WorklogTrainingSessionComponent, 
+    FeedbackOthersComponent, 
+    FeedbackSelfComponent ],
   providers: [
     CookieService,
     AuthGuard,

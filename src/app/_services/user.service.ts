@@ -9,7 +9,8 @@ import { environment } from '../../environments/environment'
 })
 export class UserService {
 
-  api_base_url = environment.API_BASE_URL
+  api_base_url = environment.API_BASE_URL;
+  wrs_api_base_url = environment.WRS_API_BASE_URL;
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -37,7 +38,7 @@ export class UserService {
   }
 
   getCurrentUser(): Observable<any> {
-    const currentUserUrl = `http://dev-services.agilestructure.in/api/v1/sessions/current.json`
+    const currentUserUrl = `${this.wrs_api_base_url}/sessions/current.json`
     return this.http.get<any>(currentUserUrl)
     .pipe(
       tap(users => {
@@ -47,9 +48,9 @@ export class UserService {
     );
   }
   
-  getUsersByName(query): Observable<any[]> {
+  getUsersByName(query): Observable<any> {
     let params = new HttpParams().set("query", query).set("per", "10");
-    const usersByNameUrl = `http://dev-services.agilestructure.in/api/v1/employees`
+    const usersByNameUrl = `${this.wrs_api_base_url}/employees`
     return this.http.get<any>(usersByNameUrl, { params: params })
     .pipe(
       tap(users => {

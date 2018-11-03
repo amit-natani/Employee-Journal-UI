@@ -1,5 +1,5 @@
 export class Entry {
-  id: number;
+  id: String;
   content: {};
   root_entry_type_id: string;
   entry_type_id: string;
@@ -7,5 +7,5 @@ export class Entry {
   description: string;
   tagged_user_ids: string[];
   sharing_level: string;
-  sharee_ids: string[];
+  shared_with: object[];
 }

@@ -25,10 +25,10 @@
                     </i></div>
                 </div>
               </div>
-              <div class="col-7" (click)="navigateToWorklogList('Worklog-Project-Task')">
+              <div class="col-7" (click)="navigateToWorklogList('Project-Task')">
                 <div class="numbers">
                   <p class="card-category">Project Tasks</p>
-                  <h4 class="card-title">{{counts['Worklog-Project-Task']}}</h4>
+                  <h4 class="card-title">{{counts['Worklog-Project-Task'] || 0}}</h4>
                 </div>
               </div>
             </div>
@@ -53,7 +53,7 @@
                     </i></div>
                 </div>
               </div>
-              <div class="col-7" (click)="navigateToWorklogList('Worklog-Self-learning')">
+              <div class="col-7" (click)="navigateToWorklogList('Self-learning')">
                 <div class="numbers">
                   <p class="card-category">Self Learning</p>
                   <h4 class="card-title">{{counts['Worklog-Self-learning'] || 0}}</h4>
@@ -109,7 +109,7 @@
                     </i></div>
                 </div>
               </div>
-              <div class="col-7" (click)="navigateToWorklogList('Worklog-Project-Meeting')">
+              <div class="col-7" (click)="navigateToWorklogList('Project-Meeting')">
                 <div class="numbers">
                   <p class="card-category">Project Meetings</p>
                   <h4 class="card-title">{{counts['Worklog-Project-Meeting'] || 0}}</h4>
@@ -139,7 +139,7 @@
                     </i></div>
                 </div>
               </div>
-              <div class="col-7" (click)="navigateToWorklogList('Worklog-Mentoring')">
+              <div class="col-7" (click)="navigateToWorklogList('Mentoring')">
                 <div class="numbers">
                   <p class="card-category">Mentoring</p>
                   <h4 class="card-title">{{counts['Worklog-Mentoring'] || 0}}</h4>
@@ -167,7 +167,7 @@
                     </i></div>
                 </div>
               </div>
-              <div class="col-7" (click)="navigateToWorklogList('Worklog-Non-project-meeting')">
+              <div class="col-7" (click)="navigateToWorklogList('Non-project-meeting')">
                 <div class="numbers">
                   <p class="card-category">Non Project Meetings</p>
                   <h4 class="card-title">{{counts['Worklog-Non-project-meeting'] || 0}}</h4>

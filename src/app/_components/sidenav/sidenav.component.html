@@ -1,0 +1,25 @@
+<div id="sidebardiv" class="sidebar">
+  <div class="sidebar-wrapper">
+    <div class="logo">
+      <h2>Journal</h2>
+    </div>
+    <ul class="nav-menu">
+      <li (click)="changeRoute('worklogs')"><a href="#" routerLink="/worklog-dashboard" [class.active]="current_location === 'worklogs'">
+          <i><img src="../assets/images/icons/home-icon.png" alt=""></i>
+          <p>Work Log </p>
+        </a></li>
+      <li (click)="changeRoute('feedbacks')"><a href="#" routerLink="/feedback-dashboard" [class.active]="current_location === 'feedbacks'">
+          <i><img src="../assets/images/icons/chart-icon.png" alt=""></i>
+          <p>Feedback</p>
+        </a></li>
+      <li (click)="changeRoute('add_entry')"><a href="#" routerLink="/add-entry" [class.active]="current_location === 'add_entry'">
+          <i><img src="../assets/images/icons/idcard-icon.png" alt=""></i>
+          <p>Add Entry </p>
+        </a></li>
+      <li (click)="changeRoute('future_task')"><a href="#" routerLink="/dashboard" [class.active]="current_location === 'future_task'">
+          <i><img src="../assets/images/icons/copy-icon.png" alt=""></i>
+          <p>Future Task </p>
+        </a></li>
+    </ul>
+  </div>
+</div>

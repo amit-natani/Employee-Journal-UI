@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   API_BASE_URL: 'http://localhost:3000',
-  REDIRECT_URI: 'eyAnc2l0ZV91cmwnOiAnaHR0cDovL2xvY2FsaG9zdDo0MjAwL3dvcmtsb2ctZGFzaGJvYXJkJ30='
+  REDIRECT_URI: 'eyAnc2l0ZV91cmwnOiAnaHR0cDovL2xvY2FsaG9zdDo0MjAwL3dvcmtsb2ctZGFzaGJvYXJkJ30=',
+  WRS_API_BASE_URL: 'http://dev-services.agilestructure.in/api/v1'
 };
 
 /*
