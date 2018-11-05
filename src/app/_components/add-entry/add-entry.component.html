@@ -40,7 +40,7 @@
         <textarea name="description" style="width: 100%" id="description-textarea" [(ngModel)]="entry.description" #description="ngModel"></textarea>
       </div> -->
       <div class="col-sm-10">
-        <div id="autocomplete-textarea" name="description" class="form-control" (input)="description=$event.target.textContent" [textContent]="description" contenteditable="true"></div>
+        <div id="autocomplete-textarea" name="description" class="form-control" (input)="description=$event.target.textContent" contenteditable="true"></div>
       </div>
     </div>
     <ng-template *ngIf="entry.entry_type_id" dynamic-content></ng-template>

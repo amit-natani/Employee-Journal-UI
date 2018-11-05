@@ -157,12 +157,14 @@ export class AddEntryComponent implements OnInit {
           replace: function (hit, currentStrategy) {
             if(currentStrategy == 'hash') {
               var html = '<a class="tag-item" href="">';
-              html += '<span class="label">' + "#" + hit + '</span></a>';
+              html += '<span class="label"> ' + hit + ' </span></a>';
+              html += " "
               return html;
             } else if (currentStrategy == 'atTheRate') {
               var html = '<a class="tag-item-user" href="">';
               // html += '<div class="picture-wrapper"><img src="https://cdn.pixabay.com/photo/2014/12/17/21/30/wild-flowers-571940_960_720.jpg" /></div>';
-              html += '<span class="label">' + "@" + hit + '</span></a>';
+              html += '<span class="label"> ' + hit + ' </span></a>';
+              html += " "
               return html;
             }
           }
@@ -179,7 +181,7 @@ export class AddEntryComponent implements OnInit {
   }
 
   saveEntry () {
-    this.entry.description = this.description;
+    this.entry.description = $('#autocomplete-textarea')[0].innerHTML;
     let errors = []
     if (this.entry.root_entry_type_id == undefined) {
       errors.push("Entry domain can't be blank")
