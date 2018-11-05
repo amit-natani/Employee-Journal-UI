@@ -1,32 +1,31 @@
 <div class="container-fluid" *ngIf="entry.id">
   <div>
-    <label>Description: </label> {{entry.description.text}}
+    <label><strong>Description: </strong></label> {{entry.description.text}}
   </div>
   <div>
-    <label>Formatted Description: </label><span [innerHTML]="entry.description.html"></span>
+    <label><strong>Formatted Description:</strong> </label><span [innerHTML]="entry.description.html"></span>
   </div>
   <div>
-    <label>Tagged Users: </label>
+    <label><strong>Tagged Users: </strong></label>
     <div *ngFor="let user of entry.description.mentionedUsers">
       {{user.full_name}}
     </div>
   </div>
   <div>
-    <label>Approval Status: </label> {{entry.status}}
+    <label><strong>Approval Status: </strong></label> {{entry.status}}
   </div>
   <div>
-    <label>Entry type version: </label> {{entry.version}}
+    <label><strong>Entry type version: </strong></label> {{entry.version}}
   </div>
   <div>
-    <label>Sharing Level: </label> {{entry.sharing_level}}
+    <label><strong>Sharing Level: </strong></label> {{entry.sharing_level}}
   </div>
+  <!-- <div>
+    <label><strong>Owner: <strong></label> {{entry.owner_user.name}}
+  </div> -->
   <div>
-    <label>Owner: </label> {{entry.owner_user.name}}
-  </div>
-  <div>
-    <label>Custom content: </label>
     <div *ngFor="let field of objectKeys(entry.content)">
-      {{field}} : {{entry.content[field]}}
+      <strong>{{field}}</strong> : {{entry.content[field]}}
     </div>
   </div>
 </div>

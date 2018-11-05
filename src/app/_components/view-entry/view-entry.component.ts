@@ -22,7 +22,7 @@ export class ViewEntryComponent implements OnInit {
     this.route.params.subscribe(value => {
       this.entryService.getEntry(value.entry_id)
       .subscribe(entry => {
-        this.entry = entry
+        this.entry = entry;
       })
     })
   }
