@@ -642,18 +642,15 @@ body, input[text], button {
 
 }
 
-/* TextComplete CSS */
 /* ------------------------------------
-  COMMON STYLE
------------------------------------- */
+     COMMON STYLE
+  ------------------------------------ */
 #autocomplete-textarea {
-  -moz-appearance: textfield-multiline;
-  -webkit-appearance: textarea;
   min-height: 80px;
   color: #000;
-  overflow: auto;
+  overflow: auto
 }
-  
+
 #autocomplete-textarea a {
   text-decoration: none;
   font-weight: normal;
@@ -667,12 +664,14 @@ body, input[text], button {
   color: #000;
   position: relative;
   padding: 3px 10px;
+  visibility: visible;
+  opacity: 1;
 }
 
 .dropdown-menu .textcomplete-item.active a {
   background: #F0F0F0;
 }
-
+  
 /* Highlighting of the matching part 
     of each search result */
 .dropdown-menu .textcomplete-item a em {
@@ -684,7 +683,7 @@ body, input[text], button {
   border-top: solid 1px #F0F0F0;
   margin-top: 3px;
 }
-
+  
 
 /* ------------------------------------
       Used in 
@@ -705,16 +704,16 @@ body, input[text], button {
   float: left;
 }
 
-.dropdown-menu .textcomplete-item .picture img {
-  width: 32px;
-}
+  .dropdown-menu .textcomplete-item .picture img {
+    width: 32px;
+  }
 
 .dropdown-menu .textcomplete-item .name {
   float: left;
   margin: 5px 0 0 5px;
 }
-  
-  
+
+
 /* ------------------------------------
       Used in 
       rich-html-textarea.html
@@ -727,32 +726,32 @@ body, input[text], button {
   border-radius: 2px;
   background: #f0f0f0;
   cursor: default;
-  border: solid 1px black;
+  border: solid 1px #dadada;
 }
 
-.tag-item:hover {
-  text-decoration: none;
-}
+  .tag-item:hover {
+    text-decoration: none;
+  }
 
-.tag-item .picture-wrapper {
-  border-radius: 2em;
-  -webkit-border-radius: 2em;
-  -moz-border-radius: 2em;
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  position: relative;
-  overflow: hidden;
-  top: 3px;
-}
+  .tag-item .picture-wrapper {
+    border-radius: 2em;
+    -webkit-border-radius: 2em;
+    -moz-border-radius: 2em;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    position: relative;
+    overflow: hidden;
+    top: 3px;
+  }
 
-.tag-item .picture-wrapper img {
-  width: 16px;
-}
+    .tag-item .picture-wrapper img {
+      width: 16px;
+    }
 
-.tag-item .label {
-  color: #181818;
-}
+  .tag-item .label {
+    color: #181818;
+  }
 
 .tag-item-user, .tag-item-user:visited {
   font-weight: normal;
