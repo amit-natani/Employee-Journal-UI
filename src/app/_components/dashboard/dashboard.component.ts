@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { EntryService } from '../../_services/entry.service';
-import { Router, NavigationExtras, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { DataService } from '../../_services/data.service';
-import { CookieService } from 'ngx-cookie-service';
-import { AuthenticationService } from '../../_services/authentication.service';
 import { UserService } from 'src/app/_services/user.service';
 
 @Component({

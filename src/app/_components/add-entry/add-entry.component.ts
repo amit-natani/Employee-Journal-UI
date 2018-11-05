@@ -36,6 +36,8 @@ export class AddEntryComponent implements OnInit {
   projects: any[];
   instance: any;
   description: any;
+  mentionedUsers: any[] = []
+  mentionedTags: any[] = [];
 
   constructor(
     private userService: UserService, 
@@ -117,11 +119,11 @@ export class AddEntryComponent implements OnInit {
 
   getCustomFields(): void {
     this.entry.content = {}
-    this.entry.title = "";
+    // this.entry.title = "";
     this.entry.description = "";
     this.entry.shared_with = [];
     this.entry.sharing_level = undefined;
-    this.entry.tagged_user_ids = [];
+    this.entry.tagged_users = [];
     this.entryTypesService.getCustomFields(this.entry['entry_type_id'])
     .subscribe(customFields => {
       this.loadDynamicComponent(customFields.custom_fields.create_url);
@@ -143,28 +145,30 @@ export class AddEntryComponent implements OnInit {
             } else if (currentStrategy == "atTheRate") {
               _this.userService.getUsersByName(query)
               .subscribe(suggestions => {
-                let names = suggestions.employees.map(function(suggesstion) {return suggesstion.full_name})
-                callback(names);
+                // let names = suggestions.employees.map(function(suggesstion) {return suggesstion.full_name})
+                callback(suggestions.employees);
               })
             }
           },
           // #5 - Template used to display each result obtained by the Algolia API
-          template: function (hit) {
-            return hit;
-            // return '<div class="picture"><img src="//image.tmdb.org/t/p/w45/'+ hit.image_path +'" /></div><span class="name">' + hit + '<span>';
+          template: function (currentStrategy, hit) {
+            if(currentStrategy == 'hash') {
+              return hit;
+            } else if (currentStrategy == 'atTheRate') {
+              return hit.full_name;
+            }
           },
           // #6 - Template used to display the selected result in the textarea
           replace: function (hit, currentStrategy) {
             if(currentStrategy == 'hash') {
-              var html = '<a class="tag-item" href="">';
-              html += '<span class="label"> ' + hit + ' </span></a>';
-              html += " "
+              _this.mentionedTags.push(hit);
+              var html = ' <a class="tag-item" href="">';
+              html += '<span class="label">' + hit + '</span></a> ';
               return html;
             } else if (currentStrategy == 'atTheRate') {
-              var html = '<a class="tag-item-user" href="">';
-              // html += '<div class="picture-wrapper"><img src="https://cdn.pixabay.com/photo/2014/12/17/21/30/wild-flowers-571940_960_720.jpg" /></div>';
-              html += '<span class="label"> ' + hit + ' </span></a>';
-              html += " "
+              _this.mentionedUsers.push(hit);
+              var html = ' <a class="tag-item-user" href="">';
+              html += '<span class="label">' + hit.full_name + '</span></a> ';
               return html;
             }
           }
@@ -174,6 +178,33 @@ export class AddEntryComponent implements OnInit {
           // footer: '<div style="text-align: center; display: block; font-size:12px; margin: 5px 0 0 0;">Powered by <a href="http://www.algolia.com"><img src="https://www.algolia.com/assets/algolia128x40.png" style="height: 14px;" /></a></div>'
       });
     }, 2000)
+
+    setTimeout(function() {
+      document.querySelector('#autocomplete-textarea').addEventListener('keydown', function(event) {
+        // Check for a backspace
+        if (event['which'] == 8) {
+            let s = window.getSelection();
+            let r = s.getRangeAt(0)
+            let el = r.startContainer.parentElement.parentElement
+            // Check if the current element is the .label
+            if (el.classList.contains('tag-item') || el.classList.contains('tag-item-user')) {
+                // Check if we are exactly at the end of the .label element
+                if (r.startOffset == r.endOffset && r.endOffset == el.textContent.length) {
+                    // prevent the default delete behavior
+                    event.preventDefault();
+                    if (el.classList.contains('highlight')) {
+                        // remove the element
+                        el.remove();
+                    } else {
+                        el.classList.add('highlight');
+                    }
+                    return;
+                }
+            }
+        }
+        // event.target.querySelectorAll('span.label.highlight').forEach(function(el) { el.classList.remove('highlight');})
+      });
+    }, 2000)
   }
 
   handleAccessibilityChange = function () {
@@ -181,7 +212,15 @@ export class AddEntryComponent implements OnInit {
   }
 
   saveEntry () {
-    this.entry.description = $('#autocomplete-textarea')[0].innerHTML;
+    let innerText = $('#autocomplete-textarea')[0].innerText
+    let innerrHTML = $('#autocomplete-textarea')[0].innerHTML;
+    this.formatMentionedUsers();
+    this.entry.description = {
+      "html": innerrHTML,
+      "text": innerText,
+      "mentionedUsers": this.mentionedUsers,
+      "tags": this.mentionedTags
+    }
     let errors = []
     if (this.entry.root_entry_type_id == undefined) {
       errors.push("Entry domain can't be blank")
@@ -189,7 +228,7 @@ export class AddEntryComponent implements OnInit {
     if (this.entry.entry_type_id == undefined) {
       errors.push("Entry type can't be blank")
     }
-    if (this.entry.description == "" || this.entry.description == undefined) {
+    if (innerText == "" || innerText == undefined) {
       errors.push("Description can't be blank")
     }
     if (this.entry.sharing_level == undefined) {
@@ -202,6 +241,7 @@ export class AddEntryComponent implements OnInit {
       let customData = this.instance.data;
       customData = this.frameCustomData(customData);
       this.formatSharees();
+      this.formatTaggedUsers();
       this.entry.content = customData;
       this.entriesService.saveEntry(this.entry).subscribe(response => {
         this.entry = new Entry();
@@ -212,6 +252,44 @@ export class AddEntryComponent implements OnInit {
       })
     } else {
       alert(errors)
+    }
+  }
+
+  formatMentionedUsers(): void {
+    let mentioedUsers = this.mentionedUsers
+    let newMentioedUsers = []
+    if (mentioedUsers != undefined && mentioedUsers.length > 0) {
+      let obj = {}
+      mentioedUsers.forEach(mentionedUser => {
+        obj['first_name'] = mentionedUser['first_name'];
+        obj['last_name'] = mentionedUser['last_name'];
+        obj['email'] = mentionedUser['email'];
+        obj['full_name'] = mentionedUser['full_name'];
+        obj['display_name'] = mentionedUser['full_name'];
+        obj['internal_id'] = mentionedUser['id'];
+        obj['external_id'] = mentionedUser['id'];
+        newMentioedUsers.push(obj)
+      })
+      this.mentionedUsers = newMentioedUsers;
+    }
+  }
+
+  formatTaggedUsers(): void {
+    let taggedUsers = this.entry.tagged_users
+    let newTaggedUsers = []
+    if (taggedUsers != undefined && taggedUsers.length > 0) {
+      let obj = {}
+      taggedUsers.forEach(mentionedUser => {
+        obj['first_name'] = mentionedUser['first_name'];
+        obj['last_name'] = mentionedUser['last_name'];
+        obj['email'] = mentionedUser['email'];
+        obj['full_name'] = mentionedUser['full_name'];
+        obj['display_name'] = mentionedUser['full_name'];
+        obj['internal_id'] = mentionedUser['id'];
+        obj['external_id'] = mentionedUser['id'];
+        newTaggedUsers.push(obj)
+      })
+      this.entry.tagged_users = newTaggedUsers;
     }
   }
 
@@ -242,6 +320,7 @@ export class AddEntryComponent implements OnInit {
         obj['last_name'] = sharee['last_name'];
         obj['email'] = sharee['email'];
         obj['full_name'] = sharee['full_name'];
+        obj['display_name'] = sharee['full_name'];
         obj['internal_id'] = sharee['id'];
         obj['external_id'] = sharee['id'];
         newSharees.push(obj)

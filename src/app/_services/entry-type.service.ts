@@ -67,4 +67,24 @@ export class EntryTypeService {
       catchError(this.handleError<any>(`getCustomFields id=${id}`))
     )
   }
+
+  getWorklogSubEntryTypes(): Observable<EntryType[]> {
+    const allSubEntryTypesUrl = `${this.api_base_url}/entry_types/all_worklog_entry_types.json`;
+    return this.http.get<EntryType[]>(allSubEntryTypesUrl)
+    .pipe(
+      tap(entryTypes => {
+        console.log("Got All worklog entry types")
+      })
+    );
+  }
+
+  getFeedbackSubEntryTypes(): Observable<EntryType[]> {
+    const allSubEntryTypesUrl = `${this.api_base_url}/entry_types/all_feedback_entry_types.json`;
+    return this.http.get<EntryType[]>(allSubEntryTypesUrl)
+    .pipe(
+      tap(entryTypes => {
+        console.log("Got All feedback entry types")
+      })
+    );
+  }
 }

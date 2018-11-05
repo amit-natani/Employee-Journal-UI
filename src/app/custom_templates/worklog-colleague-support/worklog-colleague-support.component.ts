@@ -26,7 +26,6 @@ export class WorklogColleagueSupportComponent implements OnInit {
   }
 
   getUsers(query): void {
-    console.log(this.data.worklog_date)
     this.userService.getUsersByName(query)
     .subscribe(users => {
       // this.users = users;

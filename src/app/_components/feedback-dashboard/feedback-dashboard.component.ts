@@ -23,7 +23,7 @@ export class FeedbackDashboardComponent implements OnInit {
     private dataService: DataService) { }
 
   ngOnInit() {
-    this.entryService.getWorklogCounts()
+    this.entryService.getFeedbackCounts()
     .subscribe(counts => {
       this.counts = counts;
     })

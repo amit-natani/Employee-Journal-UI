@@ -16,11 +16,15 @@
     </div>
   </form>
   <div *ngIf="entries.length > 0 && entryTypeId">
-    <div class="panel panel-default" *ngFor="let entry of entries">
-      <div class="panel-body">{{entry.title}}</div>
+    <div class="card col-4" *ngFor="let entry of entries">
+      <div class="card-body">
+        <p class="card-text">{{entry.description.text}}</p>
+        <p class="card-text">{{entry.created_at | date:'MMM dd yyyy'}}</p>
+        <a routerLink="/user/entries/{{entry.id}}" class="btn btn-primary">View Entry</a>
+      </div>
     </div>
   </div>
   <div *ngIf="entries.length == 0 && entryTypeId">
-    <h4>No worklogs found</h4>
+    <h4>No entries found</h4>
   </div>
 </div>

@@ -32,6 +32,7 @@ import { ErrorInterceptor } from './_helpers/error.interceptor';
 import { FeedbackDashboardComponent } from './_components/feedback-dashboard/feedback-dashboard.component';
 import { SidenavComponent } from './_components/sidenav/sidenav.component';
 import { MainnavComponent } from './_components/mainnav/mainnav.component';
+import { ViewEntryComponent } from './_components/view-entry/view-entry.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { MainnavComponent } from './_components/mainnav/mainnav.component';
     LoginComponent,
     FeedbackDashboardComponent,
     SidenavComponent,
-    MainnavComponent
+    MainnavComponent,
+    ViewEntryComponent
   ],
   imports: [
     BrowserModule,

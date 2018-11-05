@@ -7,6 +7,7 @@ import { ListEntriesComponent } from './_components/list-entries/list-entries.co
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './_guards/auth_guard';
 import { FeedbackDashboardComponent } from './_components/feedback-dashboard/feedback-dashboard.component';
+import { ViewEntryComponent } from './_components/view-entry/view-entry.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/worklog-dashboard', pathMatch: 'full' },
@@ -15,8 +16,8 @@ const routes: Routes = [
   { path: 'feedback-dashboard', component: FeedbackDashboardComponent, canActivate: [AuthGuard] },
   { path: 'add-entry', component: AddEntryComponent, canActivate: [AuthGuard] },
   { path: 'add-entry/:type', component: AddEntryComponent, canActivate: [AuthGuard] },
-  { path: 'user/worklogs', component: ListEntriesComponent, canActivate: [AuthGuard] },
-  { path: 'user/feedbacks', component: ListEntriesComponent, canActivate: [AuthGuard] }
+  { path: 'user/:type', component: ListEntriesComponent, canActivate: [AuthGuard] },
+  { path: 'user/entries/:entry_id', component: ViewEntryComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({

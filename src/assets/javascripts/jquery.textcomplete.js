@@ -776,7 +776,7 @@ if (typeof jQuery === 'undefined') {
         index = this.data.length;
         this.data.push(datum);
         html += '<li class="textcomplete-item" data-index="' + index + '"><a>';
-        html +=   datum.strategy.template(datum.value, datum.term);
+        html +=   datum.strategy.template(datum.strategy.currentStrategy, datum.value, datum.term);
         html += '</a></li>';
       }
       return html;

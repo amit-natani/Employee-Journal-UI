@@ -19,17 +19,36 @@ export class ListEntriesComponent implements OnInit {
   entries: Entry[] = [];
   preSelectedEntryType: EntryType;
   
-  constructor(private dataService: DataService, private entryTypeService: EntryTypeService, private entryService: EntryService, private route: ActivatedRoute) { }
+  constructor(
+    private dataService: DataService, 
+    private entryTypeService: EntryTypeService, 
+    private entryService: EntryService, 
+    private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.entryTypeService.getAllSubEntryTypes()
-    .subscribe(entryTypes => {
-      this.entryTypes = entryTypes;
-      if(this.dataService.data != null) {
-        this.preSelectedEntryType = this.entryTypes.find(entryType => entryType.name === this.dataService.data)
-        this.entryTypeId = this.preSelectedEntryType.id;
-        this.dataService.data = null;
-        this.getEntries();
+    this.route.params.subscribe(value => {
+      if (value.type === "worklogs") {
+        this.entryTypeService.getWorklogSubEntryTypes()
+        .subscribe(entryTypes => {
+          this.entryTypes = entryTypes;
+          if(this.dataService.data != null) {
+            this.preSelectedEntryType = this.entryTypes.find(entryType => entryType.name === this.dataService.data)
+            this.entryTypeId = this.preSelectedEntryType.id;
+            this.dataService.data = null;
+            this.getEntries();
+          }
+        })
+      } else if (value.type === "feedbacks") {
+        this.entryTypeService.getFeedbackSubEntryTypes()
+        .subscribe(entryTypes => {
+          this.entryTypes = entryTypes;
+          if(this.dataService.data != null) {
+            this.preSelectedEntryType = this.entryTypes.find(entryType => entryType.name === this.dataService.data)
+            this.entryTypeId = this.preSelectedEntryType.id;
+            this.dataService.data = null;
+            this.getEntries();
+          }
+        })
       }
     })
   }

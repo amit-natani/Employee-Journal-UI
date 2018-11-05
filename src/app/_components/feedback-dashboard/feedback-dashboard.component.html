@@ -25,10 +25,10 @@
                     </i></div>
                 </div>
               </div>
-              <div class="col-7" (click)="navigateToFeedbackList('Worklog-Project-Task')">
+              <div class="col-7" (click)="navigateToFeedbackList('Self')">
                 <div class="numbers">
-                  <p class="card-category">Project Tasks</p>
-                  <h4 class="card-title">{{counts['Worklog-Project-Task']}}</h4>
+                  <p class="card-category">Feedback Self</p>
+                  <h4 class="card-title">{{counts['Self'] || 0}}</h4>
                 </div>
               </div>
             </div>
@@ -53,10 +53,10 @@
                     </i></div>
                 </div>
               </div>
-              <div class="col-7" (click)="navigateToFeedbackList('Worklog-Self-learning')">
+              <div class="col-7" (click)="navigateToFeedbackList('Others')">
                 <div class="numbers">
-                  <p class="card-category">Self Learning</p>
-                  <h4 class="card-title">{{counts['Worklog-Self-learning'] || 0}}</h4>
+                  <p class="card-category">Feedback Others</p>
+                  <h4 class="card-title">{{counts['Others'] || 0}}</h4>
                 </div>
               </div>
             </div>
@@ -64,243 +64,6 @@
           <div class="card-footer">
             <hr>
             <div class="stats"><i class="fa fa-calendar-o"></i>Last day
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-xl-3 col-md-6">
-        <div class="card card-stats">
-          <!---->
-          <!---->
-          <div class="card-body">
-            <div class="row">
-              <div class="col-5">
-                <div class="icon-big text-center">
-                  <div class="icon-danger"><i class="material-icons text-danger">
-                      warning
-                    </i></div>
-                </div>
-              </div>
-              <div class="col-7">
-                <div class="numbers">
-                  <p class="card-category">Misc Activities</p>
-                  <h4 class="card-title">23</h4>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="card-footer">
-            <hr>
-            <div class="stats"><i class="fa fa-clock-o"></i>Last day
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-xl-3 col-md-6">
-        <div class="card card-stats">
-          <!---->
-          <!---->
-          <div class="card-body">
-            <div class="row">
-              <div class="col-5">
-                <div class="icon-big text-center">
-                  <div class="icon-info"><i class="material-icons text-primary">
-                      nature_people
-                    </i></div>
-                </div>
-              </div>
-              <div class="col-7" (click)="navigateToFeedbackList('Worklog-Project-Meeting')">
-                <div class="numbers">
-                  <p class="card-category">Project Meetings</p>
-                  <h4 class="card-title">{{counts['Worklog-Project-Meeting'] || 0}}</h4>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="card-footer">
-            <hr>
-            <div class="stats"><i class="fa fa-refresh"></i>Updated now
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row my-4">
-      <div class="col-xl-3 col-md-6">
-        <div class="card card-stats">
-          <!---->
-          <!---->
-          <div class="card-body">
-            <div class="row">
-              <div class="col-5">
-                <div class="icon-big text-center">
-                  <div class="icon-warning"><i class="material-icons text-warning">
-                      record_voice_over
-                    </i></div>
-                </div>
-              </div>
-              <div class="col-7" (click)="navigateToFeedbackList('Worklog-Mentoring')">
-                <div class="numbers">
-                  <p class="card-category">Mentoring</p>
-                  <h4 class="card-title">{{counts['Worklog-Mentoring'] || 0}}</h4>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="card-footer">
-            <hr>
-            <div class="stats"><i class="fa fa-refresh"></i>Updated now
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-xl-3 col-md-6">
-        <div class="card card-stats">
-          <!---->
-          <!---->
-          <div class="card-body">
-            <div class="row">
-              <div class="col-5">
-                <div class="icon-big text-center">
-                  <div class="icon-success"><i class="material-icons text-secondary">
-                      donut_small
-                    </i></div>
-                </div>
-              </div>
-              <div class="col-7" (click)="navigateToFeedbackList('Worklog-Non-project-meeting')">
-                <div class="numbers">
-                  <p class="card-category">Non Project Meetings</p>
-                  <h4 class="card-title">{{counts['Worklog-Non-project-meeting'] || 0}}</h4>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="card-footer">
-            <hr>
-            <div class="stats"><i class="fa fa-calendar-o"></i>Last day
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-xl-3 col-md-6">
-        <div class="card card-stats">
-          <!---->
-          <!---->
-          <div class="card-body">
-            <div class="row">
-              <div class="col-5">
-                <div class="icon-big text-center">
-                  <div class="icon-danger text-success">
-                    <!-- For IE9 or below. -->
-
-                    <i class="material-icons">
-                      gavel
-                    </i>
-                  </div>
-                </div>
-              </div>
-              <div class="col-7">
-                <div class="numbers">
-                  <p class="card-category">Support Projects</p>
-                  <h4 class="card-title">32</h4>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="card-footer">
-            <hr>
-            <div class="stats"><i class="fa fa-clock-o"></i>Last day
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-    <div class="row my-4">
-      <div class="col-md-8">
-        <div class="card" style="min-height: 350px">
-          <div class="change-view">
-            <div class="grid" data-toggle="tooltip" data-placement="top" title="Change View">
-              <i class="material-icons">
-                grid_off
-              </i>
-            </div>
-          </div>
-          <div class="card-content chart-view in">
-            <h4 class="card-title"><i class="material-icons">timeline</i> Project Task
-            </h4>
-            <div class="chart chart-js-container">
-              <canvas id="areaChart"></canvas>
-            </div>
-          </div>
-
-
-          <div class="card-content  chart-view">
-            <h4 class="card-title"><i class="material-icons">timeline</i> Project Task
-            </h4>
-            <table class="table table-bordered mt-2">
-              <thead class="text-primary">
-                  <tr><th>Name</th>
-                  <th>Country</th>
-                  <th>City</th>
-                  <th>Salary</th>
-              </tr></thead>
-              <tbody>
-                  <tr>
-                      <td>Dakota Rice</td>
-                      <td>Niger</td>
-                      <td>Oud-Turnhout</td>
-                      <td class="text-primary">$36,738</td>
-                  </tr>
-                  <tr>
-                      <td>Minerva Hooper</td>
-                      <td>Curaçao</td>
-                      <td>Sinaai-Waas</td>
-                      <td class="text-primary">$23,789</td>
-                  </tr>
-                  <tr>
-                      <td>Sage Rodriguez</td>
-                      <td>Netherlands</td>
-                      <td>Baileux</td>
-                      <td class="text-primary">$56,142</td>
-                  </tr>
-                  <tr>
-                      <td>Philip Chaney</td>
-                      <td>Korea, South</td>
-                      <td>Overland Park</td>
-                      <td class="text-primary">$38,735</td>
-                  </tr>
-                  <tr>
-                      <td>Doris Greene</td>
-                      <td>Malawi</td>
-                      <td>Feldkirchen in Kärnten</td>
-                      <td class="text-primary">$63,542</td>
-                  </tr>
-                  <tr>
-                      <td>Mason Porter</td>
-                      <td>Chile</td>
-                      <td>Gloucester</td>
-                      <td class="text-primary">$78,615</td>
-                  </tr>
-              </tbody>
-          </table>
-          </div>
-
-
-        </div>
-
-      </div>
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-header">
-            <h4 class="card-title">Overall Report
-            </h4>
-          </div>
-          <div class="card-content">
-
-            <div class="chart">
-              <canvas id="doughnutChart" height="400" width="498" style="display: block; width: 498px; height: 400px;"></canvas>
-
             </div>
           </div>
         </div>

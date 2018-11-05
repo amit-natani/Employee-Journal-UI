@@ -1,0 +1,35 @@
+<div class="container-fluid" *ngIf="entry.id">
+  <div>
+    <label>Description: </label> {{entry.description.text}}
+  </div>
+  <div>
+    <label>Formatted Description: </label><span [innerHTML]="entry.description.html"></span>
+  </div>
+  <div>
+    <label>Tagged Users: </label>
+    <div *ngFor="let user of entry.description.mentionedUsers">
+      {{user.full_name}}
+    </div>
+  </div>
+  <div>
+    <label>Approval Status: </label> {{entry.status}}
+  </div>
+  <div>
+    <label>Entry type version: </label> {{entry.version}}
+  </div>
+  <div>
+    <label>Sharing Level: </label> {{entry.sharing_level}}
+  </div>
+  <div>
+    <label>Owner: </label> {{entry.owner_user.name}}
+  </div>
+  <div>
+    <label>Custom content: </label>
+    <div *ngFor="let field of objectKeys(entry.content)">
+      {{field}} : {{entry.content[field]}}
+    </div>
+  </div>
+</div>
+<div *ngIf="!entry.id">
+  <p>No record found</p>
+</div>
