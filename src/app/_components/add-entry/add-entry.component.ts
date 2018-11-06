@@ -11,6 +11,7 @@ import { TagService } from 'src/app/_services/tag.service';
 declare var $: any;
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { EntryType } from 'src/app/_models/entry-type';
 
 @Component({
   selector: 'app-add-entry',
@@ -38,6 +39,14 @@ export class AddEntryComponent implements OnInit {
   description: any;
   mentionedUsers: any[] = []
   mentionedTags: any[] = [];
+  worklog_types: any[] = [];
+  feedback_types: any[] = [];
+
+
+  // New Schema Test
+  levelZeroEntryTypes: EntryType[] = []
+  levelOneEntryTypes: EntryType[] = []
+  levelTwoEntryTypes: EntryType[] = []
 
   constructor(
     private userService: UserService, 
@@ -71,18 +80,25 @@ export class AddEntryComponent implements OnInit {
       key: 'tagged_users',
       value: 'Tagged users only'
     }]
+
+
+    // New Schema test
+    this.getLevelZeroEntryTypes();
+    this.getEntryTypesForButtons();
   }
 
   loadDynamicComponent(componentUrl) {
     let dynamicItem = this.dynamicContentservice.getDynamicContent(componentUrl);
-    let componentFactory = this.componentFactoryResolver.resolveComponentFactory(dynamicItem.component);
+    if (dynamicItem) {
+      let componentFactory = this.componentFactoryResolver.resolveComponentFactory(dynamicItem.component);
 
-    let viewContainerRef = this.dynamicContentHost.viewContainerRef;
-    viewContainerRef.clear();
+      let viewContainerRef = this.dynamicContentHost.viewContainerRef;
+      viewContainerRef.clear();
 
-    let componentRef = viewContainerRef.createComponent(componentFactory);
-    this.instance = <DynamicComponent>componentRef.instance
-    this.instance.data = dynamicItem.data;
+      let componentRef = viewContainerRef.createComponent(componentFactory);
+      this.instance = <DynamicComponent>componentRef.instance
+      this.instance.data = dynamicItem.data;
+    }
   }
 
   getUsers(): void {
@@ -222,11 +238,17 @@ export class AddEntryComponent implements OnInit {
       "tags": this.mentionedTags
     }
     let errors = []
-    if (this.entry.root_entry_type_id == undefined) {
-      errors.push("Entry domain can't be blank")
+    // if (this.entry.root_entry_type_id == undefined) {
+    //   errors.push("Entry domain can't be blank")
+    // }
+    // if (this.entry.entry_type_id == undefined) {
+    //   errors.push("Entry type can't be blank")
+    // }
+    if(this.entry.task_type_id == undefined || this.entry.task_type_id == null) {
+      errors.push("Please select task type")
     }
-    if (this.entry.entry_type_id == undefined) {
-      errors.push("Entry type can't be blank")
+    if(this.entry.task_sub_type_id == undefined && this.levelTwoEntryTypes.length > 0) {
+      errors.push("Please select task sub-type")
     }
     if (innerText == "" || innerText == undefined) {
       errors.push("Description can't be blank")
@@ -238,14 +260,17 @@ export class AddEntryComponent implements OnInit {
       errors.push("Select users to share")
     }
     if(errors.length == 0) {
-      let customData = this.instance.data;
-      customData = this.frameCustomData(customData);
+      let customData = {}
+      if (this.instance) {
+        customData = this.instance.data;
+        customData = this.frameCustomData(customData);
+      }
       this.formatSharees();
       this.formatTaggedUsers();
       this.entry.content = customData;
       this.entriesService.saveEntry(this.entry).subscribe(response => {
         this.entry = new Entry();
-        this.instance = null;
+        this.instance = undefined;
         alert("Entry created successfully")
       }, errors => {
         alert(errors)
@@ -333,6 +358,163 @@ export class AddEntryComponent implements OnInit {
     this.userService.getUsersByName(query)
     .subscribe(users => {
       this.users = users.employees
+    })
+  }
+
+
+
+  // New Schema Test
+  getLevelZeroEntryTypes(): void {
+    this.entryTypesService.getLevelZeroTypes()
+    .subscribe(entryTypes => {
+      this.levelZeroEntryTypes = entryTypes;
+    })
+  }
+
+  getLevelOneEntryTypes(): void {
+    this.entry.task_type_id = null;
+    this.entry.task_sub_type_id = null;
+    this.entryTypesService.getTaskTypes(this.entry.level_zero_type_id)
+    .subscribe(entryTypes => {
+      this.levelOneEntryTypes = entryTypes;
+    })
+  }
+
+  getLevelTwoEntryTypes(): void {
+    this.entry.task_sub_type_id = null;
+    this.entryTypesService.getLevelTwoTypes(this.entry.task_type_id)
+    .subscribe(entryTypes => {
+      this.levelTwoEntryTypes = entryTypes;
+    })
+  }
+
+  getDynamicContent(): void {
+    this.entry.content = {}
+    this.entry.description = "";
+    this.entry.shared_with = [];
+    this.entry.sharing_level = undefined;
+    this.entry.tagged_users = [];
+    let id = null
+    if (this.entry.task_sub_type_id != null && this.entry.task_sub_type_id != undefined) {
+      id = this.entry.task_sub_type_id
+    } else {
+      id = this.entry.task_type_id
+    }
+    this.entryTypesService.getCustomFields(id)
+    .subscribe(customFields => {
+      this.loadDynamicComponent(customFields.custom_fields.create_url);
+    })
+    const _this = this;
+    setTimeout(function() {
+      $("#autocomplete-textarea").textcomplete([
+        {
+          matchHash: /(^|\s)#(\w*(?:\s*\w*))$/,
+          matchAtTheRate: /(^|\s)@(\w*(?:\s*\w*))$/,
+          search: function(query, currentStrategy, callback) {
+            let lastQuery = query;
+            if(currentStrategy == "hash") {
+              _this.tagService.getOpenSuggestions(query)
+              .subscribe(suggestions => {
+                callback(suggestions);
+              })
+            } else if (currentStrategy == "atTheRate") {
+              _this.userService.getUsersByName(query)
+              .subscribe(suggestions => {
+                // let names = suggestions.employees.map(function(suggesstion) {return suggesstion.full_name})
+                callback(suggestions.employees);
+              })
+            }
+          },
+          // #5 - Template used to display each result obtained by the Algolia API
+          template: function (currentStrategy, hit) {
+            if(currentStrategy == 'hash') {
+              return hit;
+            } else if (currentStrategy == 'atTheRate') {
+              return hit.full_name;
+            }
+          },
+          // #6 - Template used to display the selected result in the textarea
+          replace: function (hit, currentStrategy) {
+            if(currentStrategy == 'hash') {
+              _this.mentionedTags.push(hit);
+              var html = ' <a class="tag-item" href="">';
+              html += '<span class="label">' + hit + '</span></a> ';
+              return html;
+            } else if (currentStrategy == 'atTheRate') {
+              _this.mentionedUsers.push(hit);
+              var html = ' <a class="tag-item-user" href="">';
+              html += '<span class="label">' + hit.full_name + '</span></a> ';
+              return html;
+            }
+          }
+        }
+      ], {
+        adapter: $.fn.textcomplete.HTMLContentEditable,
+          // footer: '<div style="text-align: center; display: block; font-size:12px; margin: 5px 0 0 0;">Powered by <a href="http://www.algolia.com"><img src="https://www.algolia.com/assets/algolia128x40.png" style="height: 14px;" /></a></div>'
+      });
+    }, 2000)
+
+    setTimeout(function() {
+      document.querySelector('#autocomplete-textarea').addEventListener('keydown', function(event) {
+        // Check for a backspace
+        if (event['which'] == 8) {
+            let s = window.getSelection();
+            let r = s.getRangeAt(0)
+            let el = r.startContainer.parentElement.parentElement
+            // Check if the current element is the .label
+            if (el.classList.contains('tag-item') || el.classList.contains('tag-item-user')) {
+                // Check if we are exactly at the end of the .label element
+                if (r.startOffset == r.endOffset && r.endOffset == el.textContent.length) {
+                    // prevent the default delete behavior
+                    event.preventDefault();
+                    if (el.classList.contains('highlight')) {
+                        // remove the element
+                        el.remove();
+                    } else {
+                        el.classList.add('highlight');
+                    }
+                    return;
+                }
+            }
+        }
+        // event.target.querySelectorAll('span.label.highlight').forEach(function(el) { el.classList.remove('highlight');})
+      });
+    }, 2000)
+  }
+
+  showAccessibility(): Boolean {
+    let flag = false;
+    if (this.entry.level_zero_type_id) {
+      console.log(this.levelOneEntryTypes.length == 0 || this.entry.task_type_id != null)
+      if (this.levelOneEntryTypes.length == 0 || this.entry.task_type_id != null) {
+        flag = true;
+      } else if (this.levelTwoEntryTypes.length == 0 || this.entry.task_sub_type_id != null) {
+        flag = true;
+      }
+    }
+    return flag;
+  }
+
+  getEntryTypesForButtons(): void {
+    this.entryTypesService.getWorklogSubEntryTypes()
+    .subscribe(worklog_types => {
+      this.worklog_types = worklog_types;
+    })
+    this.entryTypesService.getFeedbackSubEntryTypes()
+    .subscribe(feedback_types => {
+      this.feedback_types = feedback_types;
+    })
+  }
+
+  getLevelTwoEntryTypesButton(id): void {
+    this.entry.task_type_id = id;
+    this.entry.task_sub_type_id = null;
+    this.entryTypesService.getLevelTwoTypes(this.entry.task_type_id)
+    .subscribe(entryTypes => {
+      this.levelTwoEntryTypes = entryTypes;
+      if (entryTypes.length == 0) {
+        this.getDynamicContent();
+      }
     })
   }
 

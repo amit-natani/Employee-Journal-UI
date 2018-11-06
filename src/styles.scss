@@ -19,7 +19,7 @@ h2, h3 {
 //   margin: 2em;
 // }
 body, input[text], button {
-  color: #888;
+  // color: #888;
   font-family: Cambria, Georgia;
 }
 /* everywhere else */
@@ -786,4 +786,8 @@ body, input[text], button {
 
 .tag-item-user .label {
   color: #302b2b7a;
+}
+
+.active_task_type {
+  background-color: blue
 }

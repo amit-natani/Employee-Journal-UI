@@ -33,6 +33,10 @@ import { FeedbackDashboardComponent } from './_components/feedback-dashboard/fee
 import { SidenavComponent } from './_components/sidenav/sidenav.component';
 import { MainnavComponent } from './_components/mainnav/mainnav.component';
 import { ViewEntryComponent } from './_components/view-entry/view-entry.component';
+import { WorklogMiscComponent } from './custom_templates/worklog-misc/worklog-misc.component';
+import { WorklogInternalEventComponent } from './custom_templates/worklog-internal-event/worklog-internal-event.component';
+import { WorklogCsrComponent } from './custom_templates/worklog-csr/worklog-csr.component';
+import { WorklogContentDevelopmentComponent } from './custom_templates/worklog-content-development/worklog-content-development.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +59,11 @@ import { ViewEntryComponent } from './_components/view-entry/view-entry.componen
     FeedbackDashboardComponent,
     SidenavComponent,
     MainnavComponent,
-    ViewEntryComponent
+    ViewEntryComponent,
+    WorklogMiscComponent,
+    WorklogInternalEventComponent,
+    WorklogCsrComponent,
+    WorklogContentDevelopmentComponent
   ],
   imports: [
     BrowserModule,
@@ -74,7 +82,11 @@ import { ViewEntryComponent } from './_components/view-entry/view-entry.componen
     WorklogProjectTaskComponent, 
     WorklogSelfLearningComponent, 
     WorklogTrainingSessionComponent, 
-    FeedbackOthersComponent, 
+    FeedbackOthersComponent,
+    WorklogMiscComponent,
+    WorklogInternalEventComponent,
+    WorklogCsrComponent,
+    WorklogContentDevelopmentComponent,
     FeedbackSelfComponent ],
   providers: [
     CookieService,

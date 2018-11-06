@@ -11,6 +11,10 @@ import { WorklogTrainingSessionComponent } from '../custom_templates/worklog-tra
 import { FeedbackSelfComponent } from '../custom_templates/feedback-self/feedback-self.component';
 import { FeedbackOthersComponent } from '../custom_templates/feedback-others/feedback-others.component';
 import { UserService } from './user.service';
+import { WorklogMiscComponent } from '../custom_templates/worklog-misc/worklog-misc.component';
+import { WorklogInternalEventComponent } from '../custom_templates/worklog-internal-event/worklog-internal-event.component';
+import { WorklogCsrComponent } from '../custom_templates/worklog-csr/worklog-csr.component';
+import { WorklogContentDevelopmentComponent } from '../custom_templates/worklog-content-development/worklog-content-development.component';
 
 @Injectable({
   providedIn: 'root'
@@ -21,10 +25,10 @@ export class DynamicContentService {
 
   }
   getDynamicContent(componentUrl) {
-    if (componentUrl == '/worklog-project-form.html') {
+    if (componentUrl == '/worklog-project-task-form.html.html') {
       return new DynamicItem(WorklogProjectTaskComponent
         , {})
-    } else if (componentUrl == '/worklog-self-learning-form.html') {
+    } else if (componentUrl == '/worklog-learning-form.html') {
       return new DynamicItem(WorklogSelfLearningComponent
         , {})
     } else if (componentUrl == '/worklog-mentoring-form.html') {
@@ -50,6 +54,18 @@ export class DynamicContentService {
         , {})
     } else if (componentUrl == '/feedback-others-form-template.html') {
       return new DynamicItem(FeedbackOthersComponent
+        , {})
+    } else if (componentUrl == '/worklog-mics-form.html') {
+      return new DynamicItem(WorklogMiscComponent
+        , {})
+    } else if (componentUrl == '/worklog-internal-event-form.html') {
+      return new DynamicItem(WorklogInternalEventComponent
+        , {})
+    } else if (componentUrl == '/worklog-csr-form.html') {
+      return new DynamicItem(WorklogCsrComponent
+        , {})
+    } else if (componentUrl == '/worklog-content-development-form.html') {
+      return new DynamicItem(WorklogContentDevelopmentComponent
         , {})
     }
   }

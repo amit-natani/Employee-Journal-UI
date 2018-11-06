@@ -1,6 +1,61 @@
 <div class="container-fluid">
   <form class="form-horizontal">
-    <div class="form-group">
+    <div style="margin: 20px 0px">
+      <h5>Worklog: </h5>
+      <button (click)="getLevelTwoEntryTypesButton(type.id)" style="margin: 5px 5px; border-radius: 40px;" *ngFor="let type of worklog_types" class="btn btn-success" [class.active_task_type]="entry.task_type_id === type.id">{{type.name}}</button>
+    </div>
+    <div style="margin: 20px 0px">
+      <h5>Feedback: </h5>
+      <button (click)="getLevelTwoEntryTypesButton(type.id)" style="margin: 5px 5px; border-radius: 40px;" *ngFor="let type of feedback_types" class="btn btn-success" [class.active_task_type]="entry.task_type_id === type.id">{{type.name}}</button>
+    </div>
+    <!-- New Schema Test Start-->
+    <!-- <div class="form-group">
+      <label class="control-label col-4">Select Entry Domain:</label>
+      <div class="col-sm-10">
+        <ng-select [items]="levelZeroEntryTypes"
+          bindLabel="name"
+          (change)="getLevelOneEntryTypes()"
+          bindValue="id"
+          placeholder="Select entry domain"
+          [(ngModel)]="entry.level_zero_type_id"
+          name="level_zero_entry_type"
+          #level_zero_entry_type="ngModel">
+        </ng-select>
+      </div>
+    </div> -->
+
+    <!-- <div class="form-group" *ngIf="levelOneEntryTypes.length > 0">
+      <label class="control-label col-4">Select Task Type:</label>
+      <div class="col-sm-10">
+        <ng-select [items]="levelOneEntryTypes"
+          bindLabel="name"
+          (change)="getLevelTwoEntryTypes()"
+          bindValue="id"
+          placeholder="Select Task Type"
+          [(ngModel)]="entry.task_type_id"
+          name="task_type"
+          #task_type="ngModel">
+        </ng-select>
+      </div>
+    </div> -->
+
+    <div class="form-group" *ngIf="levelTwoEntryTypes.length > 0 && entry.task_type_id">
+      <label class="control-label col-4">Select Sub Type:</label>
+      <div class="col-sm-10">
+        <ng-select [items]="levelTwoEntryTypes"
+          bindLabel="name"
+          (change)="getDynamicContent()"
+          bindValue="id"
+          placeholder="Select Sub type"
+          [(ngModel)]="entry.task_sub_type_id"
+          name="level_two_entry_type"
+          #entry_domain="ngModel">
+        </ng-select>
+      </div>
+    </div>
+
+    <!-- New Schema Test End -->
+    <!-- <div class="form-group">
       <label class="control-label col-4">Select Entry Domain:</label>
       <div class="col-sm-10">
           <ng-select [items]="rootEntryTypes"
@@ -13,8 +68,8 @@
             #entry_domain="ngModel">
           </ng-select>
       </div>
-    </div>
-    <div class="form-group" *ngIf="entry.root_entry_type_id">
+    </div> -->
+    <!-- <div class="form-group" *ngIf="entry.root_entry_type_id">
       <label class="control-label col-4">Select Entry Type:</label>
       <div class="col-sm-10">
           <ng-select [items]="entryTypes"
@@ -27,14 +82,14 @@
             #entry_type="ngModel">
           </ng-select>
       </div>
-    </div>
+    </div> -->
     <!-- <div class="form-group" *ngIf="entry.entry_type_id">
       <label class="control-label col-4">Enter title:</label>
       <div class="col-sm-10">
         <input name="title" type="text" class="form-control" [(ngModel)]="entry.title" #title="ngModel">
       </div>
     </div> -->
-    <div class="form-group" *ngIf="entry.entry_type_id">
+    <div class="form-group" *ngIf="entry.task_type_id">
       <label class="control-label col-4">Description:</label>
       <!-- <div class="col-sm-10">
         <textarea name="description" style="width: 100%" id="description-textarea" [(ngModel)]="entry.description" #description="ngModel"></textarea>
@@ -43,8 +98,9 @@
         <div id="autocomplete-textarea" name="description" class="form-control" (input)="description=$event.target.textContent" contenteditable="true"></div>
       </div>
     </div>
-    <ng-template *ngIf="entry.entry_type_id" dynamic-content></ng-template>
-    <div class="form-group" *ngIf="entry.entry_type_id">
+    <!-- <ng-template *ngIf="entry.entry_type_id" dynamic-content></ng-template> -->
+    <ng-template *ngIf="entry.task_type_id" dynamic-content></ng-template>
+    <div class="form-group" *ngIf="entry.task_type_id">
       <label class="control-label col-4">Tag Users:</label>
       <div class="col-sm-10">
         <ng-select [items]="users"
@@ -60,7 +116,7 @@
         </ng-select>
       </div>
     </div>
-    <div class="form-group" *ngIf="entry.entry_type_id">
+    <div class="form-group" *ngIf="entry.task_type_id">
       <label class="control-label col-4">Accessibility:</label>
       <div class="col-4">
         <ng-select [items]="sharingLevels"
@@ -90,7 +146,7 @@
         </ng-select>
       </div>
     </div>
-    <div class="form-group" *ngIf="entry.entry_type_id"> 
+    <div class="form-group" *ngIf="entry.task_type_id"> 
       <div class="col-sm-offset-2 col-sm-10">
         <button class="btn btn-success" type="button" (click)="saveEntry()">Save Entry</button>
       </div>

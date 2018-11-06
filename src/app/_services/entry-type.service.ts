@@ -87,4 +87,37 @@ export class EntryTypeService {
       })
     );
   }
+
+
+
+  // Just for new schema test
+  getLevelZeroTypes(): Observable<EntryType[]> {
+    const levelZeroTypes = `${this.api_base_url}/entry_types/level_zero_types.json`;
+    return this.http.get<EntryType[]>(levelZeroTypes)
+    .pipe(
+      tap(entryTypes => {
+        console.log("Got Level zero entry types")
+      })
+    );
+  }
+
+  getLevelOneTypes(id): Observable<EntryType[]> {
+    const levelOneTypes = `${this.api_base_url}/entry_types/${id}/level_one_types.json`;
+    return this.http.get<EntryType[]>(levelOneTypes)
+    .pipe(
+      tap(entryTypes => {
+        console.log("Got Level one entry types")
+      })
+    );
+  }
+
+  getLevelTwoTypes(id): Observable<EntryType[]> {
+    const levelTwoTypes = `${this.api_base_url}/entry_types/${id}/level_two_types.json`;
+    return this.http.get<EntryType[]>(levelTwoTypes)
+    .pipe(
+      tap(entryTypes => {
+        console.log("Got Level two entry types")
+      })
+    );
+  }
 }
