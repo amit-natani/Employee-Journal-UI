@@ -4,6 +4,7 @@
     <ng-select [items]="billingHeads"
       bindLabel="display_name"
       placeholder="Select billing head"
+      [multiple]="true"
       [(ngModel)]="data.billing_head"
       name="billingHead"
       #billingHead="ngModel">

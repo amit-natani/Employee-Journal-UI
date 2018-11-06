@@ -25,7 +25,7 @@ export class DynamicContentService {
 
   }
   getDynamicContent(componentUrl) {
-    if (componentUrl == '/worklog-project-task-form.html.html') {
+    if (componentUrl == '/worklog-project-task-form.html') {
       return new DynamicItem(WorklogProjectTaskComponent
         , {})
     } else if (componentUrl == '/worklog-learning-form.html') {

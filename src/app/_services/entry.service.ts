@@ -61,7 +61,7 @@ export class EntryService {
   }
 
   getEntriesById(id): Observable<Entry[]> {
-    const entriesUrl = `${this.api_base_url}/entries/${id}/get_entries_by_entry_type_id.json`
+    const entriesUrl = `${this.api_base_url}/entries/${id}/get_entries_by_task_type_id.json`
     return this.http.get<any[]>(entriesUrl)
     .pipe(
       tap(entries => {

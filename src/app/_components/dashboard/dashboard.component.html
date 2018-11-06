@@ -6,7 +6,7 @@
     </div>
   </a>
 </div> -->
-<div class="content">
+<!-- <div class="content">
   <div class="container-fluid">
     <div class="row my-4">
       <a routerLink="/add-entry/worklog">Add New</a>
@@ -14,8 +14,6 @@
     <div class="row my-4">
       <div class="col-xl-3 col-md-6">
         <div class="card card-stats">
-          <!---->
-          <!---->
           <div class="card-body">
             <div class="row">
               <div class="col-5">
@@ -42,8 +40,6 @@
       </div>
       <div class="col-xl-3 col-md-6">
         <div class="card card-stats">
-          <!---->
-          <!---->
           <div class="card-body">
             <div class="row">
               <div class="col-5">
@@ -70,8 +66,6 @@
       </div>
       <div class="col-xl-3 col-md-6">
         <div class="card card-stats">
-          <!---->
-          <!---->
           <div class="card-body">
             <div class="row">
               <div class="col-5">
@@ -98,8 +92,6 @@
       </div>
       <div class="col-xl-3 col-md-6">
         <div class="card card-stats">
-          <!---->
-          <!---->
           <div class="card-body">
             <div class="row">
               <div class="col-5">
@@ -128,8 +120,6 @@
     <div class="row my-4">
       <div class="col-xl-3 col-md-6">
         <div class="card card-stats">
-          <!---->
-          <!---->
           <div class="card-body">
             <div class="row">
               <div class="col-5">
@@ -156,8 +146,6 @@
       </div>
       <div class="col-xl-3 col-md-6">
         <div class="card card-stats">
-          <!---->
-          <!---->
           <div class="card-body">
             <div class="row">
               <div class="col-5">
@@ -184,15 +172,11 @@
       </div>
       <div class="col-xl-3 col-md-6">
         <div class="card card-stats">
-          <!---->
-          <!---->
           <div class="card-body">
             <div class="row">
               <div class="col-5">
                 <div class="icon-big text-center">
                   <div class="icon-danger text-success">
-                    <!-- For IE9 or below. -->
-
                     <i class="material-icons">
                       gavel
                     </i>
@@ -285,10 +269,7 @@
               </tbody>
           </table>
           </div>
-
-
         </div>
-
       </div>
       <div class="col-md-4">
         <div class="card">
@@ -297,14 +278,133 @@
             </h4>
           </div>
           <div class="card-content">
-
             <div class="chart">
               <canvas id="doughnutChart" height="400" width="498" style="display: block; width: 498px; height: 400px;"></canvas>
-
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</div> -->
+
+<div class="content">
+  <div class="container-fluid">
+    <div class="row my-4">
+      <a routerLink="/add-entry/worklog">Add New</a>
+    </div>
+    <div class="row my-4">
+      <div class="col-xl-3 col-md-6" *ngFor="let key of objectKeys(counts)" (click)="navigateToWorklogList(key)">
+        <div class="card card-stats">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-5">
+                <div class="icon-big text-center">
+                  <div class="icon-warning"><i class="material-icons text-info">
+                      equalizer
+                    </i></div>
+                </div>
+              </div>
+              <div class="col-7">
+                <div class="numbers">
+                  <p class="card-category">{{key}}</p>
+                  <h4 class="card-title">{{counts[key] || 0}}</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <hr>
+            <div class="stats"><i class="fa fa-refresh"></i>Updated now
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row my-4">
+      <div class="col-md-8">
+        <div class="card" style="min-height: 350px">
+          <div class="change-view">
+            <div class="grid" data-toggle="tooltip" data-placement="top" title="Change View">
+              <i class="material-icons">
+                grid_off
+              </i>
+            </div>
+          </div>
+          <div class="card-content chart-view in">
+            <h4 class="card-title"><i class="material-icons">timeline</i> Project Task
+            </h4>
+            <div class="chart chart-js-container">
+              <canvas id="areaChart"></canvas>
+            </div>
+          </div>
+
+
+          <div class="card-content  chart-view">
+            <h4 class="card-title"><i class="material-icons">timeline</i> Project Task
+            </h4>
+            <table class="table table-bordered mt-2">
+              <thead class="text-primary">
+                  <tr><th>Name</th>
+                  <th>Country</th>
+                  <th>City</th>
+                  <th>Salary</th>
+              </tr></thead>
+              <tbody>
+                  <tr>
+                      <td>Dakota Rice</td>
+                      <td>Niger</td>
+                      <td>Oud-Turnhout</td>
+                      <td class="text-primary">$36,738</td>
+                  </tr>
+                  <tr>
+                      <td>Minerva Hooper</td>
+                      <td>Curaçao</td>
+                      <td>Sinaai-Waas</td>
+                      <td class="text-primary">$23,789</td>
+                  </tr>
+                  <tr>
+                      <td>Sage Rodriguez</td>
+                      <td>Netherlands</td>
+                      <td>Baileux</td>
+                      <td class="text-primary">$56,142</td>
+                  </tr>
+                  <tr>
+                      <td>Philip Chaney</td>
+                      <td>Korea, South</td>
+                      <td>Overland Park</td>
+                      <td class="text-primary">$38,735</td>
+                  </tr>
+                  <tr>
+                      <td>Doris Greene</td>
+                      <td>Malawi</td>
+                      <td>Feldkirchen in Kärnten</td>
+                      <td class="text-primary">$63,542</td>
+                  </tr>
+                  <tr>
+                      <td>Mason Porter</td>
+                      <td>Chile</td>
+                      <td>Gloucester</td>
+                      <td class="text-primary">$78,615</td>
+                  </tr>
+              </tbody>
+          </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title">Overall Report
+            </h4>
+          </div>
+          <div class="card-content">
+            <div class="chart">
+              <canvas id="doughnutChart" height="400" width="498" style="display: block; width: 498px; height: 400px;"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
