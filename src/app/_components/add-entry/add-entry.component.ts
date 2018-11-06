@@ -374,7 +374,7 @@ export class AddEntryComponent implements OnInit {
   getLevelOneEntryTypes(): void {
     this.entry.task_type_id = null;
     this.entry.task_sub_type_id = null;
-    this.entryTypesService.getTaskTypes(this.entry.level_zero_type_id)
+    this.entryTypesService.getLevelOneTypes(this.entry.level_zero_type_id)
     .subscribe(entryTypes => {
       this.levelOneEntryTypes = entryTypes;
     })
