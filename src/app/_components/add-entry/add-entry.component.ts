@@ -233,7 +233,6 @@ export class AddEntryComponent implements OnInit {
     let userIds = []
     this.mentionedTags = []
     children.forEach(child => {
-      console.log(child.classList)
       if (child.classList.contains('tag-item') || child.classList.contains('label')) {
         this.mentionedTags.push(child.children[0].textContent)
       } else if (child.classList.contains('tag-item-user')) {
@@ -243,6 +242,8 @@ export class AddEntryComponent implements OnInit {
     let innerText = $('#autocomplete-textarea')[0].innerText
     let innerrHTML = $('#autocomplete-textarea')[0].innerHTML;
     this.formatMentionedUsers();
+    this.checkForNewTags(innerText);
+    // innerText = this.formatDescriptionText(innerText)
     this.formatMentionedTags();
     this.mentionedUsers = this.mentionedUsers.filter(user => {
       return userIds.includes(user.external_id.toString())
@@ -391,6 +392,15 @@ export class AddEntryComponent implements OnInit {
       })
       this.entry.shared_with = newSharees;
     }
+  }
+
+  checkForNewTags(innerText): void {
+    let wordsArr = innerText.split(" ");
+    wordsArr.forEach(word => {
+      if(word.startsWith("#")) {
+        this.mentionedTags.push(word.substr(1))
+      }
+    })
   }
 
   getTaggingUsers(query): void {

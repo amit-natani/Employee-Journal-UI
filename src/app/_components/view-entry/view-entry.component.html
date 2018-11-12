@@ -2,14 +2,20 @@
   <div>
     <label><strong>Description: </strong></label> {{entry.description.text}}
   </div>
-  <div>
+  <!-- <div>
     <label><strong>Formatted Description:</strong> </label><span [innerHTML]="entry.description.html"></span>
-  </div>
+  </div> -->
   <div>
     <label><strong>Tagged Users: </strong></label>
     <div *ngFor="let user of entry.description.mentionedUsers">
       {{user.full_name}}
     </div>
+  </div>
+  <div>
+    <label><strong>Tags: </strong></label>
+    <button disabled style="margin: 0px 5px;" class="btn btn-success" *ngFor="let tag of entry.description.tags">
+      {{tag}}
+    </button>
   </div>
   <div>
     <label><strong>Approval Status: </strong></label> {{entry.status}}
