@@ -231,8 +231,10 @@ export class AddEntryComponent implements OnInit {
     let children = $('#autocomplete-textarea')[0].children
     children = Array.prototype.slice.call( children )
     let userIds = []
+    this.mentionedTags = []
     children.forEach(child => {
-      if (child.classList.contains('tag-item')) {
+      console.log(child.classList)
+      if (child.classList.contains('tag-item') || child.classList.contains('label')) {
         this.mentionedTags.push(child.children[0].textContent)
       } else if (child.classList.contains('tag-item-user')) {
         userIds.push(child.classList[1]);
@@ -313,6 +315,7 @@ export class AddEntryComponent implements OnInit {
         obj['email'] = mentionedUser['email'];
         obj['full_name'] = mentionedUser['full_name'];
         obj['display_name'] = mentionedUser['full_name'];
+        obj['id'] = mentionedUser['id'];
         obj['internal_id'] = mentionedUser['id'] || mentionedUser['internal_id'];
         obj['external_id'] = mentionedUser['id'] || mentionedUser['external_id'];
         newMentioedUsers.push(Object.assign({}, obj));
@@ -343,9 +346,10 @@ export class AddEntryComponent implements OnInit {
         obj['email'] = mentionedUser['email'];
         obj['full_name'] = mentionedUser['full_name'];
         obj['display_name'] = mentionedUser['full_name'];
+        obj['id'] = mentionedUser['id'];
         obj['internal_id'] = mentionedUser['id'];
         obj['external_id'] = mentionedUser['id'];
-        newTaggedUsers.push(obj)
+        newTaggedUsers.push(Object.assign({}, obj))
       })
       this.entry.tagged_users = newTaggedUsers;
     }
@@ -360,8 +364,10 @@ export class AddEntryComponent implements OnInit {
         obj['display_name'] = billingHead.display_name;
         obj['manager'] = billingHead.manager;
         obj['internalId'] = billingHead.id;
-        obj['externalId'] = billingHead.id;
-        newBillingHead.push(obj)
+        obj['id'] = billingHead.id;
+        obj['external_id'] = billingHead.id;
+        obj['internal_id'] = billingHead.id;
+        newBillingHead.push(Object.assign({}, obj))
       })
       customData.billing_head = newBillingHead;
     }
