@@ -183,7 +183,7 @@ export class AddEntryComponent implements OnInit {
               return html;
             } else if (currentStrategy == 'atTheRate') {
               _this.mentionedUsers.push(hit);
-              var html = ' <a class="tag-item-user" href="">';
+              var html = ` <a class="tag-item-user ${hit.id}" href="">`;
               html += '<span class="label">' + hit.full_name + '</span></a> ';
               return html;
             }
@@ -228,9 +228,23 @@ export class AddEntryComponent implements OnInit {
   }
 
   saveEntry () {
+    let children = $('#autocomplete-textarea')[0].children
+    children = Array.prototype.slice.call( children )
+    let userIds = []
+    children.forEach(child => {
+      if (child.classList.contains('tag-item')) {
+        this.mentionedTags.push(child.children[0].textContent)
+      } else if (child.classList.contains('tag-item-user')) {
+        userIds.push(child.classList[1]);
+      }
+    })
     let innerText = $('#autocomplete-textarea')[0].innerText
     let innerrHTML = $('#autocomplete-textarea')[0].innerHTML;
     this.formatMentionedUsers();
+    this.formatMentionedTags();
+    this.mentionedUsers = this.mentionedUsers.filter(user => {
+      return userIds.includes(user.external_id.toString())
+    })
     this.entry.description = {
       "html": innerrHTML,
       "text": innerText,
@@ -281,6 +295,14 @@ export class AddEntryComponent implements OnInit {
   }
 
   formatMentionedUsers(): void {
+    var temp=[];
+    this.mentionedUsers = this.mentionedUsers.filter((x, i)=> {
+      if (temp.indexOf(x.id) < 0) {
+        temp.push(x.id);
+        return true;
+      }
+      return false;
+    })
     let mentioedUsers = this.mentionedUsers
     let newMentioedUsers = []
     if (mentioedUsers != undefined && mentioedUsers.length > 0) {
@@ -291,12 +313,23 @@ export class AddEntryComponent implements OnInit {
         obj['email'] = mentionedUser['email'];
         obj['full_name'] = mentionedUser['full_name'];
         obj['display_name'] = mentionedUser['full_name'];
-        obj['internal_id'] = mentionedUser['id'];
-        obj['external_id'] = mentionedUser['id'];
-        newMentioedUsers.push(obj)
+        obj['internal_id'] = mentionedUser['id'] || mentionedUser['internal_id'];
+        obj['external_id'] = mentionedUser['id'] || mentionedUser['external_id'];
+        newMentioedUsers.push(Object.assign({}, obj));
       })
       this.mentionedUsers = newMentioedUsers;
     }
+  }
+
+  formatMentionedTags(): void {
+    var temp=[];
+    this.mentionedTags = this.mentionedTags.filter((x, i)=> {
+      if (temp.indexOf(x) < 0) {
+        temp.push(x);
+        return true;
+      }
+      return false;
+    })
   }
 
   formatTaggedUsers(): void {
@@ -405,87 +438,11 @@ export class AddEntryComponent implements OnInit {
       this.loadDynamicComponent(customFields.custom_fields.create_url);
     })
     const _this = this;
-    setTimeout(function() {
-      $("#autocomplete-textarea").textcomplete([
-        {
-          matchHash: /(^|\s)#(\w*(?:\s*\w*))$/,
-          matchAtTheRate: /(^|\s)@(\w*(?:\s*\w*))$/,
-          search: function(query, currentStrategy, callback) {
-            let lastQuery = query;
-            if(currentStrategy == "hash") {
-              _this.tagService.getOpenSuggestions(query)
-              .subscribe(suggestions => {
-                callback(suggestions);
-              })
-            } else if (currentStrategy == "atTheRate") {
-              _this.userService.getUsersByName(query)
-              .subscribe(suggestions => {
-                // let names = suggestions.employees.map(function(suggesstion) {return suggesstion.full_name})
-                callback(suggestions.employees);
-              })
-            }
-          },
-          // #5 - Template used to display each result obtained by the Algolia API
-          template: function (currentStrategy, hit) {
-            if(currentStrategy == 'hash') {
-              return hit;
-            } else if (currentStrategy == 'atTheRate') {
-              return hit.full_name;
-            }
-          },
-          // #6 - Template used to display the selected result in the textarea
-          replace: function (hit, currentStrategy) {
-            if(currentStrategy == 'hash') {
-              _this.mentionedTags.push(hit);
-              var html = ' <a class="tag-item" href="">';
-              html += '<span class="label">' + hit + '</span></a> ';
-              return html;
-            } else if (currentStrategy == 'atTheRate') {
-              _this.mentionedUsers.push(hit);
-              var html = ' <a class="tag-item-user" href="">';
-              html += '<span class="label">' + hit.full_name + '</span></a> ';
-              return html;
-            }
-          }
-        }
-      ], {
-        adapter: $.fn.textcomplete.HTMLContentEditable,
-          // footer: '<div style="text-align: center; display: block; font-size:12px; margin: 5px 0 0 0;">Powered by <a href="http://www.algolia.com"><img src="https://www.algolia.com/assets/algolia128x40.png" style="height: 14px;" /></a></div>'
-      });
-    }, 2000)
-
-    setTimeout(function() {
-      document.querySelector('#autocomplete-textarea').addEventListener('keydown', function(event) {
-        // Check for a backspace
-        if (event['which'] == 8) {
-            let s = window.getSelection();
-            let r = s.getRangeAt(0)
-            let el = r.startContainer.parentElement.parentElement
-            // Check if the current element is the .label
-            if (el.classList.contains('tag-item') || el.classList.contains('tag-item-user')) {
-                // Check if we are exactly at the end of the .label element
-                if (r.startOffset == r.endOffset && r.endOffset == el.textContent.length) {
-                    // prevent the default delete behavior
-                    event.preventDefault();
-                    if (el.classList.contains('highlight')) {
-                        // remove the element
-                        el.remove();
-                    } else {
-                        el.classList.add('highlight');
-                    }
-                    return;
-                }
-            }
-        }
-        // event.target.querySelectorAll('span.label.highlight').forEach(function(el) { el.classList.remove('highlight');})
-      });
-    }, 2000)
   }
 
   showAccessibility(): Boolean {
     let flag = false;
     if (this.entry.level_zero_type_id) {
-      console.log(this.levelOneEntryTypes.length == 0 || this.entry.task_type_id != null)
       if (this.levelOneEntryTypes.length == 0 || this.entry.task_type_id != null) {
         flag = true;
       } else if (this.levelTwoEntryTypes.length == 0 || this.entry.task_sub_type_id != null) {
@@ -515,6 +472,85 @@ export class AddEntryComponent implements OnInit {
       if (entryTypes.length == 0) {
         this.getDynamicContent();
       }
+      const _this = this;
+      setTimeout(function() {
+        $("#autocomplete-textarea").textcomplete([
+          {
+            matchHash: /(^|\s)#(\w*(?:\s*\w*))$/,
+            matchAtTheRate: /(^|\s)@(\w*(?:\s*\w*))$/,
+            search: function(query, currentStrategy, callback) {
+              let lastQuery = query;
+              if(currentStrategy == "hash") {
+                _this.tagService.getOpenSuggestions(query)
+                .subscribe(suggestions => {
+                  callback(suggestions);
+                })
+              } else if (currentStrategy == "atTheRate") {
+                _this.userService.getUsersByName(query)
+                .subscribe(suggestions => {
+                  // let names = suggestions.employees.map(function(suggesstion) {return suggesstion.full_name})
+                  callback(suggestions.employees);
+                })
+              }
+            },
+            // #5 - Template used to display each result obtained by the Algolia API
+            template: function (currentStrategy, hit) {
+              if(currentStrategy == 'hash') {
+                return hit;
+              } else if (currentStrategy == 'atTheRate') {
+                return hit.full_name;
+              }
+            },
+            // #6 - Template used to display the selected result in the textarea
+            replace: function (hit, currentStrategy) {
+              if(currentStrategy == 'hash') {
+                // _this.mentionedTags.push(hit);
+                var html = ' <a class="tag-item" href="">';
+                html += '<span class="label">' + hit + '</span></a> ';
+                return html;
+              } else if (currentStrategy == 'atTheRate') {
+                _this.mentionedUsers.push(hit);
+                var html = ` <a class="tag-item-user ${hit.id}" href="">`;
+                html += '<span class="label">' + hit.full_name + '</span></a> ';
+                return html;
+              }
+            }
+          }
+        ], {
+          adapter: $.fn.textcomplete.HTMLContentEditable,
+            // footer: '<div style="text-align: center; display: block; font-size:12px; margin: 5px 0 0 0;">Powered by <a href="http://www.algolia.com"><img src="https://www.algolia.com/assets/algolia128x40.png" style="height: 14px;" /></a></div>'
+        });
+      }, 2000)
+  
+      setTimeout(function() {
+        document.querySelector('#autocomplete-textarea').addEventListener('keydown', function(event) {
+          // Check for a backspace
+          if (event['which'] == 8) {
+              let s = window.getSelection();
+              let r = s.getRangeAt(0)
+              let el = r.startContainer.parentElement.parentElement
+              // Check if the current element is the .label
+              if (el.classList.contains('tag-item') || el.classList.contains('tag-item-user')) {
+                  // Check if we are exactly at the end of the .label element
+                  event.preventDefault();
+                  el.remove();
+                  // if (r.startOffset == r.endOffset && r.endOffset == el.textContent.length) {
+                  //     // prevent the default delete behavior
+                  //     event.preventDefault();
+                  //     // if (el.classList.contains('highlight')) {
+                  //     //   // remove the element
+                  //     //   el.remove();
+                  //     // } else {
+                  //     //   el.classList.add('highlight');
+                  //     // }
+                  //     el.remove();
+                  //     return;
+                  // }
+              }
+          }
+          // event.target.querySelectorAll('span.label.highlight').forEach(function(el) { el.classList.remove('highlight');})
+        });
+      }, 2000)
     })
   }
 
