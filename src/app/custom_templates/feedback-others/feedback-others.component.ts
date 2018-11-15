@@ -1,13 +1,14 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { TagService } from 'src/app/_services/tag.service';
 import { UserService } from 'src/app/_services/user.service';
+import { DynamicComponent } from 'src/app/dynamic-component';
 
 @Component({
   selector: 'app-feedback-others',
   templateUrl: './feedback-others.component.html',
   styleUrls: ['./feedback-others.component.scss']
 })
-export class FeedbackOthersComponent implements OnInit {
+export class FeedbackOthersComponent implements OnInit, DynamicComponent {
 
   users: object[];
   billingHeads: object[];
@@ -19,10 +20,14 @@ export class FeedbackOthersComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // this.userService.getUsers()
-    // .subscribe(users => {
-    //   this.users = users;
-    // })
+    if (this.data != undefined) {
+      console.log(this.data)
+      let data = this.data;
+      this.data = {};
+      this.data.billing_head = data.billing_head;
+      this.data.related_to = data.taggedUsers;
+      this.data.worklog_date = data.worklog_date;
+    }
     this.tagService.getBillingHeadList()
     .subscribe(billingHeads => {
       this.billingHeads = billingHeads;
@@ -35,5 +40,4 @@ export class FeedbackOthersComponent implements OnInit {
       this.users = users.employees
     })
   }
-
 }

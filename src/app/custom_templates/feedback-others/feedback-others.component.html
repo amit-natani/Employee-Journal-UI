@@ -5,6 +5,7 @@
       bindLabel="display_name"
       placeholder="Select billing head"
       [multiple]="true"
+      (change)="onChange()"
       [(ngModel)]="data.billing_head"
       name="billingHead"
       #billingHead="ngModel">
@@ -17,12 +18,18 @@
     <ng-select [items]="users"
       bindLabel="full_name"
       (search)="getUsers($event)"
-      bindValue="id"
+      [multiple]="true"
       placeholder="Select user"
       [(ngModel)]="data.related_to"
       name="user"
       #user="ngModel">
     </ng-select>
+  </div>
+</div>
+<div class="form-group">
+  <label class="control-label col-sm-2">Created for date:</label>
+  <div class="col-sm-10">
+    <input name="worklogdate" class="form-control" type="date" [(ngModel)]="data.worklog_date"/>
   </div>
 </div>
 <div class="form-group">

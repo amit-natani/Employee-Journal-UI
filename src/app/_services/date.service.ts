@@ -10,7 +10,7 @@ export class DateService {
   getCurrentDate(): String {
     let currentDate = new Date();
     let date = currentDate.getDate();
-    let stringDate = "";
+    let stringDate = date.toString();
     if (date < 10) {
       stringDate = "0" + date.toString()
     }

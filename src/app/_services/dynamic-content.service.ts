@@ -24,49 +24,49 @@ export class DynamicContentService {
   constructor(private userService: UserService) {
 
   }
-  getDynamicContent(componentUrl) {
+  getDynamicContent(componentUrl, data) {
     if (componentUrl == '/worklog-project-task-form.html') {
       return new DynamicItem(WorklogProjectTaskComponent
-        , {})
+        , data)
     } else if (componentUrl == '/worklog-learning-form.html') {
       return new DynamicItem(WorklogSelfLearningComponent
-        , {})
+        , data)
     } else if (componentUrl == '/worklog-mentoring-form.html') {
       return new DynamicItem(WorklogMentoringComponent
-        , {})
+        , data)
     } else if (componentUrl == '/worklog-colleague-support-form.html') {
       return new DynamicItem(WorklogColleagueSupportComponent
-        , {})
+        , data)
     } else if (componentUrl == '/worklog-project-meeting-form.html') {
       return new DynamicItem(WorklogProjectMeetingComponent
-        , {})
+        , data)
     } else if (componentUrl == '/worklog-non-project-meeting-form.html') {
       return new DynamicItem(WorklogNonProjectMeetingComponent
-        , {})
+        , data)
     } else if (componentUrl == '/worklog-interview-form.html') {
       return new DynamicItem(WorklogInterviewComponent
-        , {})
+        , data)
     } else if (componentUrl == '/worklog-training-session-form.html') {
       return new DynamicItem(WorklogTrainingSessionComponent
-        , {})
+        , data)
     } else if (componentUrl == '/feedback-self-form-template.html') {
       return new DynamicItem(FeedbackSelfComponent
-        , {})
+        , data)
     } else if (componentUrl == '/feedback-others-form-template.html') {
       return new DynamicItem(FeedbackOthersComponent
-        , {})
+        , data)
     } else if (componentUrl == '/worklog-mics-form.html') {
       return new DynamicItem(WorklogMiscComponent
-        , {})
+        , data)
     } else if (componentUrl == '/worklog-internal-event-form.html') {
       return new DynamicItem(WorklogInternalEventComponent
-        , {})
+        , data)
     } else if (componentUrl == '/worklog-csr-form.html') {
       return new DynamicItem(WorklogCsrComponent
-        , {})
+        , data)
     } else if (componentUrl == '/worklog-content-development-form.html') {
       return new DynamicItem(WorklogContentDevelopmentComponent
-        , {})
+        , data)
     }
   }
 }

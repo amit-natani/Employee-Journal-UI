@@ -82,7 +82,7 @@ export class EntryService {
     );
   }
 
-  saveEntry(entry: Entry): Observable<any> {
+  saveEntry(entry: any): Observable<any> {
     const saveEntryUrl = `${this.api_base_url}/entries.json`
     return this.http.post<Entry>(saveEntryUrl, entry, this.httpOptions)
     .pipe(

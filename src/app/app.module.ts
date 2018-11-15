@@ -11,6 +11,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './/app-routing.module';
 import { WorklogInterviewComponent } from './custom_templates/worklog-interview/worklog-interview.component';
 import { DynamicContentDirective } from './_directives/dynamic-content.directive';
+import { DynamicContentInstantFeedbackDirective } from './_directives/dynamic-content-instant-feedback.directive';
 import { WorklogProjectTaskComponent } from './custom_templates/worklog-project-task/worklog-project-task.component';
 import { WorklogProjectMeetingComponent } from './custom_templates/worklog-project-meeting/worklog-project-meeting.component';
 import { WorklogNonProjectMeetingComponent } from './custom_templates/worklog-non-project-meeting/worklog-non-project-meeting.component';
@@ -45,6 +46,7 @@ import { WorklogContentDevelopmentComponent } from './custom_templates/worklog-c
     AddEntryComponent,
     WorklogInterviewComponent,
     DynamicContentDirective,
+    DynamicContentInstantFeedbackDirective,
     WorklogProjectTaskComponent,
     WorklogProjectMeetingComponent,
     WorklogNonProjectMeetingComponent,

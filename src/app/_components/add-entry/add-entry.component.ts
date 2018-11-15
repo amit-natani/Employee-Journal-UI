@@ -1,8 +1,9 @@
-import { Component, OnInit, Input, TemplateRef, ComponentFactoryResolver, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, TemplateRef, ComponentFactoryResolver, ViewChild, ElementRef, AfterViewInit, AfterViewChecked, ViewChildren, QueryList } from '@angular/core';
 import { EntryService } from '../../_services/entry.service';
 import { EntryTypeService } from '../../_services/entry-type.service';
 import { Entry } from '../../_models/entry';
 import { DynamicContentDirective } from '../../_directives/dynamic-content.directive';
+import { DynamicContentInstantFeedbackDirective } from '../../_directives/dynamic-content-instant-feedback.directive';
 import { DynamicContentService } from '../../_services/dynamic-content.service';
 import { DynamicComponent } from '../../dynamic-component';
 import { UserService } from '../../_services/user.service';
@@ -12,18 +13,21 @@ declare var $: any;
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { EntryType } from 'src/app/_models/entry-type';
+import { FeedbackOthersComponent } from '../../custom_templates/feedback-others/feedback-others.component';
 
 @Component({
   selector: 'app-add-entry',
   templateUrl: './add-entry.component.html',
   styleUrls: ['./add-entry.component.scss']
 })
-export class AddEntryComponent implements OnInit {
+export class AddEntryComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
-  @ViewChild('selectElem') el:ElementRef;
-  @Input() myTemplate: TemplateRef<any>;
+  // @ViewChild('selectElem') el:ElementRef;
+  // @Input() myTemplate: TemplateRef<any>;
 
+  @ViewChildren('feedbacks') childFeedbacks: QueryList<FeedbackOthersComponent>;
   @ViewChild(DynamicContentDirective) dynamicContentHost: DynamicContentDirective;
+  @ViewChild(DynamicContentInstantFeedbackDirective) dynamicContentInstantFeedbackHost: DynamicContentInstantFeedbackDirective;
 
   users: Observable<any>[];
   entryTypes: any[];
@@ -36,11 +40,22 @@ export class AddEntryComponent implements OnInit {
   custom_page: string;
   projects: any[];
   instance: any;
+  feedbackInstance: any;
   description: any;
   mentionedUsers: any[] = []
   mentionedTags: any[] = [];
   worklog_types: any[] = [];
   feedback_types: any[] = [];
+  addFeedback: boolean = false;
+  ableForFeedback: boolean = false;
+  indexes: Number[] = []
+  feedbackInitialData: Object = {
+    data: {}
+  }
+  errors: any[] = [];
+  feedbacks: Entry[] = [];
+  objectKeys = Object.keys;
+  showSuccessMessage: Boolean = false;
 
 
   // New Schema Test
@@ -81,14 +96,21 @@ export class AddEntryComponent implements OnInit {
       value: 'Tagged users only'
     }]
 
-
     // New Schema test
     this.getLevelZeroEntryTypes();
     this.getEntryTypesForButtons();
   }
 
+  ngAfterViewInit() {
+    // console.log("-------",this.childFeedback);
+  }
+
+  ngAfterViewChecked() {
+    // console.log("-------",this.childFeedback);
+  }
+
   loadDynamicComponent(componentUrl) {
-    let dynamicItem = this.dynamicContentservice.getDynamicContent(componentUrl);
+    let dynamicItem = this.dynamicContentservice.getDynamicContent(componentUrl, {});
     if (dynamicItem) {
       let componentFactory = this.componentFactoryResolver.resolveComponentFactory(dynamicItem.component);
 
@@ -98,6 +120,20 @@ export class AddEntryComponent implements OnInit {
       let componentRef = viewContainerRef.createComponent(componentFactory);
       this.instance = <DynamicComponent>componentRef.instance
       this.instance.data = dynamicItem.data;
+    }
+  }
+
+  loadDynamicComponentInstantFeedback(componentUrl, data) {
+    let dynamicItem = this.dynamicContentservice.getDynamicContent(componentUrl, data);
+    if (dynamicItem) {
+      let componentFactory = this.componentFactoryResolver.resolveComponentFactory(dynamicItem.component);
+
+      let viewContainerRef = this.dynamicContentInstantFeedbackHost.viewContainerRef;
+      viewContainerRef.clear();
+
+      let componentRef = viewContainerRef.createComponent(componentFactory);
+      this.feedbackInstance = <DynamicComponent>componentRef.instance
+      this.feedbackInstance.data = dynamicItem.data;
     }
   }
 
@@ -136,7 +172,7 @@ export class AddEntryComponent implements OnInit {
   getCustomFields(): void {
     this.entry.content = {}
     // this.entry.title = "";
-    this.entry.description = "";
+    this.entry.description = {};
     this.entry.shared_with = [];
     this.entry.sharing_level = undefined;
     this.entry.tagged_users = [];
@@ -228,6 +264,15 @@ export class AddEntryComponent implements OnInit {
   }
 
   saveEntry () {
+    let feedbackCustomData = this.childFeedbacks['_results'].map(function(result) {
+      return result.data;
+    });
+    let customFeedbacks = []
+    this.feedbacks.forEach(function(feedback, index) {
+      let obj = feedback;
+      obj.content = feedbackCustomData[index]
+      customFeedbacks.push(obj)
+    })
     let children = $('#autocomplete-textarea')[0].children
     children = Array.prototype.slice.call( children )
     let userIds = []
@@ -243,7 +288,6 @@ export class AddEntryComponent implements OnInit {
     let innerrHTML = $('#autocomplete-textarea')[0].innerHTML;
     this.formatMentionedUsers();
     this.checkForNewTags(innerText);
-    // innerText = this.formatDescriptionText(innerText)
     this.formatMentionedTags();
     this.mentionedUsers = this.mentionedUsers.filter(user => {
       return userIds.includes(user.external_id.toString())
@@ -255,6 +299,10 @@ export class AddEntryComponent implements OnInit {
       "tags": this.mentionedTags
     }
     let errors = []
+    let entryErrors = {
+      entry: []
+    }
+    errors.push(entryErrors)
     // if (this.entry.root_entry_type_id == undefined) {
     //   errors.push("Entry domain can't be blank")
     // }
@@ -262,21 +310,21 @@ export class AddEntryComponent implements OnInit {
     //   errors.push("Entry type can't be blank")
     // }
     if(this.entry.task_type_id == undefined || this.entry.task_type_id == null) {
-      errors.push("Please select task type")
+      errors[0]['entry'].push("Please select task type")
     }
     if(this.entry.task_sub_type_id == undefined && this.levelTwoEntryTypes.length > 0) {
-      errors.push("Please select task sub-type")
+      errors[0]['entry'].push("Please select task sub-type")
     }
     if (innerText == "" || innerText == undefined) {
-      errors.push("Description can't be blank")
+      errors[0]['entry'].push("Description can't be blank")
     }
     if (this.entry.sharing_level == undefined) {
-      errors.push("Sharing level can't be blank")
+      errors[0]['entry'].push("Sharing level can't be blank")
     }
     if(this.entry.sharing_level == 'custom' && this.entry.shared_with.length == 0) {
-      errors.push("Select users to share")
+      errors[0]['entry'].push("Select users to share")
     }
-    if(errors.length == 0) {
+    if(errors[0]['entry'].length == 0) {
       let customData = {}
       if (this.instance) {
         customData = this.instance.data;
@@ -285,15 +333,26 @@ export class AddEntryComponent implements OnInit {
       this.formatSharees();
       this.formatTaggedUsers();
       this.entry.content = customData;
-      this.entriesService.saveEntry(this.entry).subscribe(response => {
-        this.entry = new Entry();
-        this.instance = undefined;
-        alert("Entry created successfully")
-      }, errors => {
-        alert(errors)
-      })
+      if(this.ableForFeedback) {
+        this.entriesService.saveEntry({entry: this.entry, feedbacks: customFeedbacks}).subscribe(response => {
+          this.entry = new Entry();
+          this.instance = undefined;
+          this.showSuccessMessage = true;
+        }, errors => {
+          this.errors = errors;
+          alert(errors)
+        })
+      } else {
+        this.entriesService.saveEntry(this.entry).subscribe(response => {
+          this.entry = new Entry();
+          this.instance = undefined;
+          this.showSuccessMessage = true;
+        }, errors => {
+          this.errors = errors;
+        })
+      }
     } else {
-      alert(errors)
+      this.errors = errors;
     }
   }
 
@@ -372,6 +431,23 @@ export class AddEntryComponent implements OnInit {
       })
       customData.billing_head = newBillingHead;
     }
+    let newRelatedTo = [];
+    let relatedTo = customData.related_to;
+    if (relatedTo != undefined && relatedTo.length > 0) {
+      relatedTo.forEach(user => {
+        let obj = {}
+        obj['first_name'] = relatedTo['first_name'];
+        obj['last_name'] = relatedTo['last_name'];
+        obj['email'] = relatedTo['email'];
+        obj['full_name'] = relatedTo['full_name'];
+        obj['display_name'] = relatedTo['full_name'];
+        obj['id'] = relatedTo['id'];
+        obj['internal_id'] = relatedTo['id'];
+        obj['external_id'] = relatedTo['id'];
+        newRelatedTo.push(Object.assign({}, obj))
+      })
+      customData.related_to = newRelatedTo;
+    }
     return customData;
   }
 
@@ -386,6 +462,7 @@ export class AddEntryComponent implements OnInit {
         obj['email'] = sharee['email'];
         obj['full_name'] = sharee['full_name'];
         obj['display_name'] = sharee['full_name'];
+        obj['id'] = sharee['id'];
         obj['internal_id'] = sharee['id'];
         obj['external_id'] = sharee['id'];
         newSharees.push(obj)
@@ -409,7 +486,6 @@ export class AddEntryComponent implements OnInit {
       this.users = users.employees
     })
   }
-
 
 
   // New Schema Test
@@ -437,7 +513,12 @@ export class AddEntryComponent implements OnInit {
     })
   }
 
-  getDynamicContent(): void {
+  getDynamicContent(event): void {
+    if(event && event.instant_feedback) {
+      this.ableForFeedback = true;
+    } else if (event && !event.instant_feedback) {
+      this.ableForFeedback = false;
+    }
     this.entry.content = {}
     this.entry.description = "";
     this.entry.shared_with = [];
@@ -479,14 +560,14 @@ export class AddEntryComponent implements OnInit {
     })
   }
 
-  getLevelTwoEntryTypesButton(id): void {
-    this.entry.task_type_id = id;
+  getLevelTwoEntryTypesButton(type): void {
+    this.entry.task_type_id = type.id;
     this.entry.task_sub_type_id = null;
     this.entryTypesService.getLevelTwoTypes(this.entry.task_type_id)
     .subscribe(entryTypes => {
       this.levelTwoEntryTypes = entryTypes;
       if (entryTypes.length == 0) {
-        this.getDynamicContent();
+        this.getDynamicContent(type);
       }
       const _this = this;
       setTimeout(function() {
@@ -504,7 +585,6 @@ export class AddEntryComponent implements OnInit {
               } else if (currentStrategy == "atTheRate") {
                 _this.userService.getUsersByName(query)
                 .subscribe(suggestions => {
-                  // let names = suggestions.employees.map(function(suggesstion) {return suggesstion.full_name})
                   callback(suggestions.employees);
                 })
               }
@@ -570,4 +650,61 @@ export class AddEntryComponent implements OnInit {
     })
   }
 
+  handleFeedbackClick(): void {
+    if(this.addFeedback) {
+      this.indexes = [0];
+      let entry = new Entry();
+      entry.description = {
+        text: ""
+      }
+      this.feedbacks.push(entry);
+    } else {
+      this.indexes = [];
+      this.feedbacks = [];
+    }
+    const _this = this;
+    if(this.addFeedback) {
+      // setTimeout(function() {
+        let children = $('#autocomplete-textarea')[0].children
+        children = Array.prototype.slice.call( children )
+        let userIds = []
+        this.mentionedTags = []
+        children.forEach(child => {
+          if (child.classList.contains('tag-item-user')) {
+            userIds.push(child.classList[1]);
+          }
+        })
+        let taggedUsers = _this.mentionedUsers;
+        var temp=[];
+        taggedUsers = taggedUsers.filter((x, i)=> {
+          if (temp.indexOf(x.id) < 0) {
+            temp.push(x.id);
+            return true;
+          }
+          return false;
+        })
+        taggedUsers = taggedUsers.filter(user => {
+          return userIds.includes(user.id.toString())
+        })
+        this.feedbackInitialData = Object.assign({}, _this.instance.data);
+        this.feedbackInitialData['taggedUsers'] = taggedUsers;
+        // _this.loadDynamicComponentInstantFeedback('/feedback-others-form-template.html', data.data)
+      // }, 500)
+    }
+  }
+
+  addAnotherFeedback(): void {
+    let currentFeedbacks = this.indexes.length;
+    this.indexes.push(currentFeedbacks)
+    let entry = new Entry();
+      entry.description = {
+        text: ""
+      }
+    this.feedbacks.push(entry);
+    // this.loadDynamicComponentInstantFeedback('/feedback-others-form-template.html', {})
+  }
+
+  acceptDatefromFeedbackComponent(data): void {
+    console.log(data);
+  }
 }

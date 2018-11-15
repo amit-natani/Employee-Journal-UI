@@ -1,12 +1,22 @@
 <div class="container-fluid">
-  <form class="form-horizontal">
+  <form id="entry-form" class="form-horizontal">
+    <div *ngFor="let error of errors" class="alert alert-danger alert-dismissible">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <div *ngFor="let key of objectKeys(error)">
+        {{key | titlecase}}: {{error[key]}}
+      </div>
+    </div>
+    <div *ngIf="showSuccessMessage" class="alert alert-success alert-dismissible">
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      Entry Created Successfully.
+    </div>
     <div style="margin: 20px 0px">
       <h5>Worklog: </h5>
-      <button (click)="getLevelTwoEntryTypesButton(type.id)" style="margin: 5px 5px; border-radius: 40px;" *ngFor="let type of worklog_types" class="btn btn-success" [class.active_task_type]="entry.task_type_id === type.id">{{type.name}}</button>
+      <button (click)="getLevelTwoEntryTypesButton(type)" style="margin: 5px 5px; border-radius: 40px;" *ngFor="let type of worklog_types" class="btn btn-success" [class.active_task_type]="entry.task_type_id === type.id">{{type.name}}</button>
     </div>
     <div style="margin: 20px 0px">
       <h5>Feedback: </h5>
-      <button (click)="getLevelTwoEntryTypesButton(type.id)" style="margin: 5px 5px; border-radius: 40px;" *ngFor="let type of feedback_types" class="btn btn-success" [class.active_task_type]="entry.task_type_id === type.id">{{type.name}}</button>
+      <button (click)="getLevelTwoEntryTypesButton(type)" style="margin: 5px 5px; border-radius: 40px;" *ngFor="let type of feedback_types" class="btn btn-success" [class.active_task_type]="entry.task_type_id === type.id">{{type.name}}</button>
     </div>
     <!-- New Schema Test Start-->
     <!-- <div class="form-group">
@@ -40,11 +50,11 @@
     </div> -->
 
     <div class="form-group" *ngIf="levelTwoEntryTypes.length > 0 && entry.task_type_id">
-      <label class="control-label col-4">Select Sub Type:</label>
+      <label class="control-label col-4">Select Sub Type: *</label>
       <div class="col-sm-10">
         <ng-select [items]="levelTwoEntryTypes"
           bindLabel="name"
-          (change)="getDynamicContent()"
+          (change)="getDynamicContent($event)"
           bindValue="id"
           placeholder="Select Sub type"
           [(ngModel)]="entry.task_sub_type_id"
@@ -90,7 +100,7 @@
       </div>
     </div> -->
     <div class="form-group" *ngIf="entry.task_type_id">
-      <label class="control-label col-4">Description:</label>
+      <label class="control-label col-4">Description: *</label>
       <!-- <div class="col-sm-10">
         <textarea name="description" style="width: 100%" id="description-textarea" [(ngModel)]="entry.description" #description="ngModel"></textarea>
       </div> -->
@@ -117,7 +127,7 @@
       </div>
     </div> -->
     <div class="form-group" *ngIf="entry.task_type_id">
-      <label class="control-label col-4">Accessibility:</label>
+      <label class="control-label col-4">Accessibility: *</label>
       <div class="col-4">
         <ng-select [items]="sharingLevels"
           bindLabel="value"
@@ -131,7 +141,7 @@
       </div>
     </div>
     <div class="form-group" *ngIf="entry.sharing_level == 'custom'">
-      <label class="control-label col-4">Select users to share:</label>
+      <label class="control-label col-4">Select users to share: *</label>
       <div class="col-10">
         <ng-select [items]="users"
           bindLabel="full_name"
@@ -144,6 +154,55 @@
           #sharees="ngModel"
           [(ngModel)]="entry.shared_with">
         </ng-select>
+      </div>
+    </div>
+    <div *ngIf="ableForFeedback" class="form-group custom-control custom-checkbox">
+      <input (change)="handleFeedbackClick()" name="addFeedback" [(ngModel)]="addFeedback" type="checkbox" class="custom-control-input" id="addFeedback">
+      <label class="custom-control-label" for="addFeedback">Add Feadback</label>
+    </div>
+    <div *ngFor="let feedback of feedbacks; index as i">
+      <div class="form-group" *ngIf="entry.task_type_id">
+        <label class="control-label col-4">Description:</label>
+        <div class="col-sm-10">
+          <textarea class="form-control" name="description" style="resize: none;" id="description-textarea" [(ngModel)]="feedback.description.text"></textarea>
+        </div>
+      </div>
+      <!-- <ng-template dynamic-content-instant-feedback></ng-template> -->
+      <app-feedback-others [data]="feedbackInitialData" #feedbacks></app-feedback-others>
+      <div class="form-group">
+        <label class="control-label col-4">Accessibility:</label>
+        <div class="col-4">
+          <ng-select [items]="sharingLevels"
+            bindLabel="value"
+            bindValue="key"
+            (change)="handleAccessibilityChange()"
+            placeholder="Choose a sharing level"
+            [(ngModel)]="feedback.sharing_level"
+            name="sharing_level"
+            #sharing_level="ngModel">
+          </ng-select> 
+        </div>
+      </div>
+      <div class="form-group" *ngIf="feedback.sharing_level == 'custom'">
+        <label class="control-label col-4">Select users to share:</label>
+        <div class="col-10">
+          <ng-select [items]="users"
+            bindLabel="full_name"
+            placeholder="Select users to tag"
+            [multiple]="true"
+            [hideSelected]="true"
+            (search)="getTaggingUsers($event)"
+            [typeahead]="tagUserQuery"
+            name="sharees"
+            #sharees="ngModel"
+            [(ngModel)]="feedback.shared_with">
+          </ng-select>
+        </div>
+      </div>
+      <div class="form-group"> 
+        <div class="col-sm-offset-2 col-sm-10">
+          <button class="btn btn-success" type="button" (click)="addAnotherFeedback()">Add another feedback</button>
+        </div>
       </div>
     </div>
     <div class="form-group" *ngIf="entry.task_type_id"> 
