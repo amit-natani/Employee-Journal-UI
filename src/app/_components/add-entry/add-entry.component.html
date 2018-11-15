@@ -1,12 +1,14 @@
 <div class="container-fluid">
   <form id="entry-form" class="form-horizontal">
-    <div *ngFor="let error of errors" class="alert alert-danger alert-dismissible">
-      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-      <div *ngFor="let key of objectKeys(error)">
-        {{key | titlecase}}: {{error[key]}}
+    <div *ngIf="!showSuccessMessage">
+      <div *ngFor="let error of errors" class="alert alert-danger alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <div *ngFor="let key of objectKeys(error)">
+          {{key | titlecase}}: {{error[key]}}
+        </div>
       </div>
     </div>
-    <div *ngIf="showSuccessMessage" class="alert alert-success alert-dismissible">
+    <div *ngIf="showSuccessMessage && errors.length == 0" class="alert alert-success alert-dismissible">
       <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
       Entry Created Successfully.
     </div>
