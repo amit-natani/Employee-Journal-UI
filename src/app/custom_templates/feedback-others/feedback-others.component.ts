@@ -26,7 +26,7 @@ export class FeedbackOthersComponent implements OnInit, DynamicComponent {
       this.data = {};
       this.data.billing_head = data.billing_head;
       this.data.related_to = data.taggedUsers;
-      this.data.worklog_date = data.worklog_date;
+      this.data.feedback_date = data.worklog_date;
     }
     this.tagService.getBillingHeadList()
     .subscribe(billingHeads => {

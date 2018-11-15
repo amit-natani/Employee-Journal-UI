@@ -340,7 +340,6 @@ export class AddEntryComponent implements OnInit, AfterViewInit, AfterViewChecke
           this.showSuccessMessage = true;
         }, errors => {
           this.errors = errors;
-          alert(errors)
         })
       } else {
         this.entriesService.saveEntry(this.entry).subscribe(response => {
