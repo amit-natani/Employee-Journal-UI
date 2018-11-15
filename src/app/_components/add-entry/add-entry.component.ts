@@ -515,9 +515,12 @@ export class AddEntryComponent implements OnInit, AfterViewInit, AfterViewChecke
   getDynamicContent(event): void {
     if(event && event.instant_feedback) {
       this.ableForFeedback = true;
+      this.feedbacks = [];
     } else if (event && !event.instant_feedback) {
       this.ableForFeedback = false;
+      this.feedbacks = [];
     }
+    this.addFeedback = false;
     this.entry.content = {}
     this.entry.description = "";
     this.entry.shared_with = [];
@@ -567,6 +570,10 @@ export class AddEntryComponent implements OnInit, AfterViewInit, AfterViewChecke
       this.levelTwoEntryTypes = entryTypes;
       if (entryTypes.length == 0) {
         this.getDynamicContent(type);
+      } else {
+        this.ableForFeedback = false;
+        this.addFeedback = false;
+        this.feedbacks = [];
       }
       const _this = this;
       setTimeout(function() {
