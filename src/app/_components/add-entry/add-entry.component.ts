@@ -10,6 +10,7 @@ import { UserService } from '../../_services/user.service';
 import { TagService } from 'src/app/_services/tag.service';
 // import * as $ from 'jquery';
 declare var $: any;
+import * as cloneDeep from 'lodash/cloneDeep';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { EntryType } from 'src/app/_models/entry-type';
@@ -25,7 +26,7 @@ export class AddEntryComponent implements OnInit, AfterViewInit, AfterViewChecke
   // @ViewChild('selectElem') el:ElementRef;
   // @Input() myTemplate: TemplateRef<any>;
 
-  @ViewChildren('feedbacks') childFeedbacks: QueryList<FeedbackOthersComponent>;
+  @ViewChildren('instnatFeedbacks') childFeedbacks: QueryList<FeedbackOthersComponent>;
   @ViewChild(DynamicContentDirective) dynamicContentHost: DynamicContentDirective;
   @ViewChild(DynamicContentInstantFeedbackDirective) dynamicContentInstantFeedbackHost: DynamicContentInstantFeedbackDirective;
 
@@ -56,6 +57,9 @@ export class AddEntryComponent implements OnInit, AfterViewInit, AfterViewChecke
   feedbacks: Entry[] = [];
   objectKeys = Object.keys;
   showSuccessMessage: Boolean = false;
+  currentFeedback: Entry = new Entry();
+  showModal: Boolean = false;
+  currentFeedbackIndex: any;
 
 
   // New Schema Test
@@ -73,6 +77,11 @@ export class AddEntryComponent implements OnInit, AfterViewInit, AfterViewChecke
     private route: ActivatedRoute) { }
 
   ngOnInit() {
+    let feedbackEntry = new Entry();
+    feedbackEntry.description = {
+      text: ""
+    }
+    this.currentFeedback = feedbackEntry;
     this.entry = new Entry();
     // this.getUsers();
     this.getRootEntryTypes();
@@ -267,12 +276,12 @@ export class AddEntryComponent implements OnInit, AfterViewInit, AfterViewChecke
     let feedbackCustomData = this.childFeedbacks['_results'].map(function(result) {
       return result.data;
     });
-    let customFeedbacks = []
-    this.feedbacks.forEach(function(feedback, index) {
-      let obj = feedback;
-      obj.content = feedbackCustomData[index]
-      customFeedbacks.push(obj)
-    })
+    let customFeedbacks = this.feedbacks;
+    // this.feedbacks.forEach(function(feedback, index) {
+    //   let obj = feedback;
+    //   obj.content = feedbackCustomData[index]
+    //   customFeedbacks.push(obj)
+    // })
     let children = $('#autocomplete-textarea')[0].children
     children = Array.prototype.slice.call( children )
     let userIds = []
@@ -657,60 +666,72 @@ export class AddEntryComponent implements OnInit, AfterViewInit, AfterViewChecke
   }
 
   handleFeedbackClick(): void {
-    if(this.addFeedback) {
-      this.indexes = [0];
-      let entry = new Entry();
-      entry.description = {
-        text: ""
-      }
-      this.feedbacks.push(entry);
-    } else {
-      this.indexes = [];
-      this.feedbacks = [];
+    let entry = new Entry();
+    entry.description = {
+      text: ""
     }
-    const _this = this;
-    if(this.addFeedback) {
-      // setTimeout(function() {
-        let children = $('#autocomplete-textarea')[0].children
-        children = Array.prototype.slice.call( children )
-        let userIds = []
-        this.mentionedTags = []
-        children.forEach(child => {
-          if (child.classList.contains('tag-item-user')) {
-            userIds.push(child.classList[1]);
-          }
-        })
-        let taggedUsers = _this.mentionedUsers;
-        var temp=[];
-        taggedUsers = taggedUsers.filter((x, i)=> {
-          if (temp.indexOf(x.id) < 0) {
-            temp.push(x.id);
-            return true;
-          }
-          return false;
-        })
-        taggedUsers = taggedUsers.filter(user => {
-          return userIds.includes(user.id.toString())
-        })
-        this.feedbackInitialData = Object.assign({}, _this.instance.data);
-        this.feedbackInitialData['taggedUsers'] = taggedUsers;
-        // _this.loadDynamicComponentInstantFeedback('/feedback-others-form-template.html', data.data)
-      // }, 500)
-    }
+    this.feedbacks.push(entry);
+    this.currentFeedback = entry;
+    this.generateDynamicDataForFeedback();
+    this.showModal = true;
+    this.currentFeedbackIndex = 0;
   }
 
   addAnotherFeedback(): void {
-    let currentFeedbacks = this.indexes.length;
-    this.indexes.push(currentFeedbacks)
+    this.showModal = true;
     let entry = new Entry();
       entry.description = {
         text: ""
       }
     this.feedbacks.push(entry);
+    this.currentFeedback = entry;
+    this.currentFeedbackIndex = this.feedbacks.length - 1;
+    this.generateDynamicDataForFeedback();
     // this.loadDynamicComponentInstantFeedback('/feedback-others-form-template.html', {})
   }
 
-  acceptDatefromFeedbackComponent(data): void {
-    console.log(data);
+  closeFeedbackModal(): void {
+    this.showModal = false;
+    console.log(this.currentFeedbackIndex)
+    this.feedbacks[this.currentFeedbackIndex].content = this.childFeedbacks['_results'][0].data;
+    console.log(this.feedbacks)
+  }
+
+  deleteInstantFeedback(index): void {
+    this.feedbacks.splice(index,1)
+  }
+
+  showInstantFeedback(index): void {
+    this.feedbackInitialData = this.feedbacks[index].content
+    this.currentFeedbackIndex = index;
+    this.showModal = true;
+    this.currentFeedback = this.feedbacks[index];
+  }
+
+  generateDynamicDataForFeedback(): void {
+    const _this = this;
+    let children = $('#autocomplete-textarea')[0].children
+    children = Array.prototype.slice.call( children )
+    let userIds = []
+    this.mentionedTags = []
+    children.forEach(child => {
+      if (child.classList.contains('tag-item-user')) {
+        userIds.push(child.classList[1]);
+      }
+    })
+    let taggedUsers = cloneDeep(this.mentionedUsers);
+    var temp=[];
+    taggedUsers = taggedUsers.filter((x, i)=> {
+      if (temp.indexOf(x.id) < 0) {
+        temp.push(x.id);
+        return true;
+      }
+      return false;
+    })
+    taggedUsers = taggedUsers.filter(user => {
+      return userIds.includes(user.id.toString())
+    })
+    this.feedbackInitialData = Object.assign({}, _this.instance.data);
+    this.feedbackInitialData['related_to'] = taggedUsers;
   }
 }

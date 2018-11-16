@@ -158,19 +158,94 @@
         </ng-select>
       </div>
     </div>
-    <div *ngIf="ableForFeedback" class="form-group custom-control custom-checkbox">
-      <input (change)="handleFeedbackClick()" name="addFeedback" [(ngModel)]="addFeedback" type="checkbox" class="custom-control-input" id="addFeedback">
+    <!-- <div *ngIf="ableForFeedback && feedbacks.length == 0" class="form-group custom-control custom-checkbox">
+      <input data-toggle="modal" data-target="#feedbackModal" (change)="handleFeedbackClick()" name="addFeedback" [(ngModel)]="addFeedback" type="checkbox" class="custom-control-input" id="addFeedback">
       <label class="custom-control-label" for="addFeedback">Add Feadback</label>
+    </div> -->
+    <div *ngIf="ableForFeedback && feedbacks.length == 0" class="form-group">
+      <a data-toggle="modal" data-target="#feedbackModal" (click)="handleFeedbackClick()" name="addFeedback" id="addFeedback" href="javascript:;">Add Feedback</a>
     </div>
-    <div *ngIf="ableForFeedback">
-      <div *ngFor="let feedback of feedbacks; index as i">
+    <div *ngIf="showModal" id="feedbackModal" data-backdrop="static" class="modal fade bd-example-modal-lg" role="dialog">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+            <h4 class="modal-title">Feedback {{currentFeedbackIndex + 1}}</h4>
+          </div>
+          <div class="modal-body" style="overflow-y: scroll; max-height: 400px">
+            <div class="form-group" *ngIf="entry.task_type_id">
+              <label class="control-label col-4">Description:</label>
+              <div class="col-sm-10">
+                <textarea class="form-control" name="description" style="resize: none;" id="description-textarea" [(ngModel)]="currentFeedback.description.text"></textarea>
+              </div>
+            </div>
+            <app-feedback-others [data]="feedbackInitialData" #instnatFeedbacks></app-feedback-others>
+            <div class="form-group">
+              <label class="control-label col-4">Accessibility:</label>
+              <div class="col-4">
+                <ng-select [items]="sharingLevels"
+                  bindLabel="value"
+                  bindValue="key"
+                  (change)="handleAccessibilityChange()"
+                  placeholder="Choose a sharing level"
+                  [(ngModel)]="currentFeedback.sharing_level"
+                  name="sharing_level"
+                  #sharing_level="ngModel">
+                </ng-select> 
+              </div>
+            </div>
+            <div class="form-group" *ngIf="currentFeedback.sharing_level == 'custom'">
+              <label class="control-label col-4">Select users to share:</label>
+              <div class="col-10">
+                <ng-select [items]="users"
+                  bindLabel="full_name"
+                  placeholder="Select users to tag"
+                  [multiple]="true"
+                  [hideSelected]="true"
+                  (search)="getTaggingUsers($event)"
+                  [typeahead]="tagUserQuery"
+                  name="sharees"
+                  #sharees="ngModel"
+                  [(ngModel)]="currentFeedback.shared_with">
+                </ng-select>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button (click)="closeFeedbackModal()" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="feedbacks.length > 0">
+      <div class="form-group"> 
+        <div class="col-sm-offset-2 col-sm-10">
+          <button data-toggle="modal" data-target="#feedbackModal" class="btn btn-success" type="button" (click)="addAnotherFeedback()">Add another feedback</button>
+        </div>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Description</th>
+            <th scope="col" colspan="2">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let feedback of feedbacks; index as i">
+            <td style="overflow-x: scroll; max-width: 20px" *ngIf="feedback.description.text">{{feedback.description.text}}</td>
+            <td *ngIf="!feedback.description.text">No description provided</td>
+            <td (click)="deleteInstantFeedback(i)"><a href="javascript:;">Delete Feedback</a></td>
+            <td data-toggle="modal" data-target="#feedbackModal" (click)="showInstantFeedback(i)"><a href="javascript:;">Show Feedback</a></td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- <div>
         <div class="form-group" *ngIf="entry.task_type_id">
           <label class="control-label col-4">Description:</label>
           <div class="col-sm-10">
             <textarea class="form-control" name="description" style="resize: none;" id="description-textarea" [(ngModel)]="feedback.description.text"></textarea>
           </div>
         </div>
-        <!-- <ng-template dynamic-content-instant-feedback></ng-template> -->
         <app-feedback-others [data]="feedbackInitialData" #feedbacks></app-feedback-others>
         <div class="form-group">
           <label class="control-label col-4">Accessibility:</label>
@@ -207,7 +282,7 @@
             <button class="btn btn-success" type="button" (click)="addAnotherFeedback()">Add another feedback</button>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="form-group" *ngIf="entry.task_type_id"> 
       <div class="col-sm-offset-2 col-sm-10">

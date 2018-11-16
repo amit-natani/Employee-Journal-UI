@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { TagService } from 'src/app/_services/tag.service';
 import { UserService } from 'src/app/_services/user.service';
 import { DynamicComponent } from 'src/app/dynamic-component';
@@ -21,12 +21,12 @@ export class FeedbackOthersComponent implements OnInit, DynamicComponent {
 
   ngOnInit() {
     if (this.data != undefined) {
-      console.log(this.data)
       let data = this.data;
       this.data = {};
       this.data.billing_head = data.billing_head;
-      this.data.related_to = data.taggedUsers;
-      this.data.feedback_date = data.worklog_date;
+      this.data.related_to = data.related_to;
+      this.data.feedback_date = data.worklog_date || data.feedback_date;
+      this.data.rating = data.rating;
     }
     this.tagService.getBillingHeadList()
     .subscribe(billingHeads => {
